@@ -4,6 +4,7 @@ import Admin from './components/Admin';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Navbar from './components/Navbar';
+import Profile from './components/Profile';
 import { Routes, Route } from 'react-router-dom';
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path='/profile' element={<Profile/>} />
       </Routes>
 
     </div>
