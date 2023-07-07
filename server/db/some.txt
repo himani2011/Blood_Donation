@@ -1,1 +1,0 @@
-mongodb+srv://himanip2311:<password>@cluster0.iyouukt.mongodb.net/?retryWrites=true&w=majority
