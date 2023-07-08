@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const donorSchema = new mongoose.Schema({
     name:{
@@ -57,7 +58,23 @@ const orgSchema = new mongoose.Schema({
     }
 });
 
+donorSchema.pre('save',async function(next){
+    if(this.isModified('pwd')){
+        this.pwd = bcrypt.hash(this.pwd,12);
+        this.cpwd = bcrypt.hash(this.cpwd,12);
+    }
+    next();
+});
+
+orgSchema.pre('save',async function(next){
+    if(this.isModified('pwd')){
+        this.pwd = await bcrypt.hash(this.pwd,12);
+        this.cpwd = await bcrypt.hash(this.cpwd,12);
+    }
+    next();
+});
+
 const Donor = mongoose.model('DONOR',donorSchema);
-const Org = mongoose.model('DONOR',orgSchema);
+const Org = mongoose.model('ORG',orgSchema);
 
 module.exports = {Donor,Org};
