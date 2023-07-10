@@ -1,13 +1,14 @@
 import React from 'react'
-import Navbar from './Navbar'
 
 const Home = () => {
     return (
         <div>
             <div className='box'>
                 <form className="d-flex w-75 p-3" role="search">
-                    <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button className="btn btn-outline-success" type="submit">Search</button>
+                    <input className="form-control me-2" type="search" placeholder="Search locations" aria-label="Search" />
+                    <label>What blood group?</label>
+                    <input type="text" className="form-control w-25" id="bgroup" placeholder="Type blood group" />
+                    <button className="btn btn-outline-success ml-3" type="submit">Search</button>
                 </form>
             </div>
             <h2><u>Results</u></h2>

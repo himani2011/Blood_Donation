@@ -19,7 +19,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/dsignup" element={<DonorSignup />} />
         <Route path="/osignup" element={<OrgSignup />} />
-        <Route path="/admin" element={<Admin />} />
+        {/* <Route path="/admin" element={<Admin />} /> */}
         <Route path='/profile' element={<Profile/>} />
         <Route path='/*' element={<ErrorPage/>} />
       </Routes>

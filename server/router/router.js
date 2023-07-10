@@ -1,10 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { Donor, Org } = require('../model/userSchema');
-//const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
 require('../db/conn');
+const requireAuth = require('../middleware/authentication');
+
+const createToken =(_id) => {
+    return jwt.sign({_id},process.env.SECRET_KEY);
+}
 
 router.get('/', (req, res) => {
     console.log("From serevr");
@@ -30,8 +34,9 @@ router.post('/dsignup', async (req, res) => {
         }
         else {
             const user = new Donor({ name, age, bloodGroup, pno, apno, email, pwd, cpwd, work });
+            const token = createToken(user._id);
             await user.save();
-            return res.status(201).json({ message: "success!" });
+            res.status(201).json({token});
         }
     } catch (error) {
         console.log(error);
@@ -58,8 +63,9 @@ router.post('/osignup', async (req, res) => {
         }
         else {
             const org = new Org({ name, bloodGroups, pno, apno, email, pwd, cpwd, pos });
+            const token = createToken(org._id);
             await org.save();
-            return res.status(201).json({ message: "success!" });
+            res.status(201).json({ token });
         }
     } catch (error) {
         console.log(error);
@@ -77,22 +83,48 @@ router.post('/login', async (req, res) => {
     const orgUser = await Org.findOne({ email: email });
     const donorUser = await Donor.findOne({ email: email });
 
-    if (orgUser || donorUser) {
+    if (orgUser) {
         const isMatchOrg = await bcrypt.compare(pwd, orgUser.pwd);
+        
+        if (isMatchOrg) {
+            const token=createToken(orgUser._id);
+            console.log(token);
+            res.status(201).json({token});
+        } else {
+            res.status(401).json({ message: "Invalid cred" });
+        }
+    }else if (donorUser) {
         const isMatchDonor = await bcrypt.compare(pwd, donorUser.pwd);
-        //console.log(isMatchDonor);
-        //
-
-        if (isMatchOrg|| isMatchDonor) {
-            res.status(201).json({ message: "Login success" });
+        
+        if (isMatchDonor) {
+            const token = createToken(donorUser._id);
+            res.status(201).json({ token});
         } else {
             res.status(401).json({ message: "Invalid cred" });
         }
     }else{
-        res.status(401).json({ message: "Unsucess" });
+        res.status(401).json({ message: "Unsucess from both" });
     }
-
-
+    
 
 })
+
+router.get('/profile', requireAuth ,(req,res) =>{
+    try {
+        if(req.org){
+            const org =1;
+            res.status(201).json(req.org);
+        }
+        else if(req.user){
+            const user=1;
+            res.status(201).json(req.user);
+        }
+        
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+
 module.exports = router;
