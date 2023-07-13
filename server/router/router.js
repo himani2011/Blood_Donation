@@ -130,7 +130,7 @@ router.get('/donorResults/:st/:ct/:bg', async (req,res)=>{
     let ct = req.params.ct;
     let bg = req.params.bg;
 
-    filtered= await Donor.find({$or: [{state:st},{city:ct},{bloodGroup:bg}]});
+    filtered= await Donor.find({$and: [{state:st},{city:ct},{bloodGroup:bg}]});
 
     res.status(201).json(filtered);
 })
