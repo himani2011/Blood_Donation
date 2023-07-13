@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { State, City} from 'country-state-city';
 
-const OrgSignup = () => {
+const OrgSignup = (props) => {
 
     const navigateTo = useNavigate();
+    
 
     const [user,setUser] = useState({
         name:"",
@@ -13,8 +15,28 @@ const OrgSignup = () => {
         email:"",
         pwd:"",
         cpwd:"",
-        pos:""
-    });
+        pos:"",
+        state:"",
+        city:""
+        });
+
+    const [cities, setCities] = useState([]);
+    const [states, setStates] = useState([]);
+
+    const fetchStates = () => {
+        const canadaStates = State.getStatesOfCountry("CA");
+        setStates(canadaStates);
+    }
+
+    let selectedSt;
+    const fetchCities = (e) => {
+
+        selectedSt = e.target.value;
+        console.log(selectedSt);
+        const stateCities = City.getCitiesOfState("CA", selectedSt);
+        setCities(stateCities);
+        console.log(stateCities);
+    };
 
     let name,value,isChecked;
     const handleInputs = (e) =>{
@@ -41,7 +63,7 @@ const OrgSignup = () => {
     const PostData = async (e) =>{
         e.preventDefault();
 
-        const {name,bloodGroups,pno,apno,email,pwd,cpwd,pos} = user;
+        const {name,bloodGroups,pno,apno,email,pwd,cpwd,pos,state,city} = user;
         
         const res = await fetch("/osignup",{
             method:"POST",
@@ -49,7 +71,7 @@ const OrgSignup = () => {
                 "Content-Type":"application/json"
             },
             body:JSON.stringify({
-                name,bloodGroups,pno,apno,email,pwd,cpwd,pos
+                name,bloodGroups,pno,apno,email,pwd,cpwd,pos,state,city
             })
         });
 
@@ -60,9 +82,15 @@ const OrgSignup = () => {
         }
         else{
             localStorage.setItem("TOKEN",data.token);
+            props.setAuth(data.token);
             navigateTo("/");
         }
     }
+
+    useEffect(() => {
+        fetchStates();
+    }, []);
+
   return (
     <div>
       <div className="mb-3 box">
@@ -115,6 +143,32 @@ const OrgSignup = () => {
                             <label className="form-check-label" htmlFor="abn">AB-</label>
                     </div>
                     <br/>
+
+                    <label htmlFor="state">Select a state:</label>
+                    <select id="state" onChange={fetchCities} value={selectedSt}>
+                        <option value="">-- Select State --</option>
+                        {
+                            states.map((state) => (
+                                <option name={state.name} key={state.isoCode} value={state.isoCode}>
+                                    {state.name}
+                                </option>
+                            ))
+                        }
+                    
+                    </select><br/>
+
+                    <label htmlFor="city">Select a city:</label>
+                    <select id="city" disabled={!states}>
+                        <option value="">--Select a city--</option>
+                        {cities.map((city) => (
+                            <option key={city.id} value={city.name}>
+                                {city.name}
+                            </option>
+                        ))}
+                    </select><br/>
+                
+
+            
 
                     <label htmlFor="email">Email</label>
                     <input type="text" className="form-control w-25" id="email" placeholder="Your Email" name='email' value={user.email} onChange={handleInputs}/>

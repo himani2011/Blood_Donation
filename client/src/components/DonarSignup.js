@@ -1,101 +1,171 @@
-import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { State,City} from 'country-state-city';
 
-const DonorSignup = () => {
+
+const DonorSignup = (props) => {
 
     const navigateTo = useNavigate();
 
-    const [user,setUser] = useState({
-        name:"",
-        age:"",
-        bloodGroup:"",
-        pno:"",
-        apno:"",
-        email:"",
-        pwd:"",
-        cpwd:"",
-        work:""
+    const [user, setUser] = useState({
+        name: "",
+        age: "",
+        bloodGroup: "",
+        pno: "",
+        apno: "",
+        email: "",
+        pwd: "",
+        cpwd: "",
+        work: "",
+        state:"",
+        city: ""
     });
 
-    let name,value;
-    const handleInputs = (e) =>{
-        name=e.target.name;
-        value=e.target.value;
-        setUser({...user,[name]:value});
+    const [cities, setCities] = useState([]);
+    const [states, setStates] = useState([]);
+    const [selectedState,setSelectedState] = useState("");
+    const [selectedCity,setSelectedCity] = useState("");
+
+    const fetchStates = () => {
+        const canadaStates = State.getStatesOfCountry("CA");
+        setStates(canadaStates);
+    }
+
+    let selectedSt;
+    let selectedCi;
+    const fetchCities = (e) => {
+        handleInputs(e);
+        selectedSt = e.target.value;
+        //console.log(selectedSt);
+        //setSelectedState(selectedSt);
+        //console.log(selectedState);
+        const stateCities = City.getCitiesOfState("CA", selectedSt);
+        setCities(stateCities);
+        //handleInputs(selectedSt);
+        //handleSelectedState(selectedSt);
+        //console.log(stateCities);
+    };
+
+    const handleSelectedState =(sl) =>{
+       setSelectedState(sl);
+       console.log("SElected state:",selectedState);
+    }
+
+    const handleSelectedCity =(e) =>{
+        selectedCi=e.target.value;
+        setSelectedCity(selectedCi);
+     }
+
+    let name, value;
+    const handleInputs = (e) => {
+        name = e.target.name;
+        value = e.target.value;
+        setUser({ ...user, [name]: value });
 
     }
 
-    const PostData = async (e) =>{
+    const PostData = async (e) => {
         e.preventDefault();
 
-        const {name,age,bloodGroup,pno,apno,email,pwd,cpwd,work} = user;
-        
-        const res = await fetch("/dsignup",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
+        const { name, age, bloodGroup, pno, apno, email, pwd, cpwd, work, state, city } = user;
+
+        const res = await fetch("/dsignup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                name,age,bloodGroup,pno,apno,email,pwd,cpwd,work
+            body: JSON.stringify({
+                name, age, bloodGroup, pno, apno, email, pwd, cpwd, work,state, city
             })
         });
 
 
         const data = await res.json();
-        if(data.status === 422 || !data){
+        if (data.status === 422 || !data) {
             window.alert("Invalid registration!!");
         }
-        else{
-            localStorage.setItem("TOKEN",data.token);
+        else {
+            localStorage.setItem("TOKEN", data.token);
+            props.setAuth(data.token);
             navigateTo("/");
         }
     }
-    
-    
+
+    useEffect(() => {
+        fetchStates();
+    }, []);
+
+
     return (
         <div>
-            {/* <div className='box mb-3'>
-                <div className="form-check form-check-inline mt-3">
-                    <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
-                    <label className="form-check-label" htmlFor="inlineRadio1">Are you a donor? (An Individual)</label>
-                </div>
-                <div className="form-check form-check-inline mb-3">
-                    <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" />
-                    <label className="form-check-label" htmlFor="inlineRadio2">Are you an organization? (A hospital, PHC etc)</label>
-                </div>
-            </div> */}
 
             <div className="mb-3 box">
                 <form method='POST' className='register-form' id='register-form'>
                     <label htmlFor="name">Name</label>
-                    <input type="text" className="form-control w-25" id="name" placeholder="Your name" name="name" value={user.name} onChange={handleInputs}/>
+                    <input type="text" className="form-control w-25" id="name" placeholder="Your name" name="name" value={user.name} onChange={handleInputs} />
 
                     <label htmlFor="age">Age</label>
-                    <input type="number" className="form-control w-25" id="age" placeholder="Your age" name="age" value={user.age} onChange={handleInputs}/>
+                    <input type="number" className="form-control w-25" id="age" placeholder="Your age" name="age" value={user.age} onChange={handleInputs} />
 
                     <label htmlFor="bgroup">Blood group </label>
-                    <p>(Write P for Positive and N for Negative. Eg. write AP if blood group is A positive and write BN for B positive blood group)</p>
-                    <input type="text" className="form-control w-25" id="bloodGroup" placeholder="Your blood group" name="bloodGroup" value={user.bloodGroup} onChange={handleInputs}/>
+    
+                    <select name='bloodGroup' value={user.bloodGroup} onChange={handleInputs} >
+                        <option>Select blood group</option>
+                        <option value="AP">A+</option>
+                        <option value="AN">A-</option>
+                        <option value="BP">B+</option>
+                        <option value="BN">B-</option>
+                        <option value="OP">O+</option>
+                        <option value="ON">O-</option>
+                        <option value="ABP">AB+</option>
+                        <option value="ABN">AB-</option>
+                    </select>
+                    <br/>
 
                     <label htmlFor="pno">Phone number</label>
-                    <input type="number" className="form-control w-25" id="pno" placeholder="Your phone number" name="pno" value={user.pno} onChange={handleInputs}/>
+                    <input type="number" className="form-control w-25" id="pno" placeholder="Your phone number" name="pno" value={user.pno} onChange={handleInputs} />
 
                     <label htmlFor="apno">Alternate phone number</label>
-                    <input type="number" className="form-control w-25" id="apno" placeholder="Your Alternate phone number" name="apno" value={user.apno} onChange={handleInputs}/>
+                    <input type="number" className="form-control w-25" id="apno" placeholder="Your Alternate phone number" name="apno" value={user.apno} onChange={handleInputs} />
 
                     <label htmlFor="work">Profession</label>
-                    <input type="work" className="form-control w-25" id="work" placeholder="Your Profession" name="work" value={user.work} onChange={handleInputs}/>
+                    <input type="text" className="form-control w-25" id="work" placeholder="Your Profession" name="work" value={user.work} onChange={handleInputs} />
+
+                    <label htmlFor="state">Select a state:</label>
+                    <select id="state" name='state' onChange={fetchCities} value={user.state}>
+                        <option value="">-- Select State --</option>
+                        {
+                            states.map((state) => (
+                                <option name={state.name} key={state.isoCode} value={state.isoCode}>
+                                    {state.name}
+                                </option>
+                            ))
+                        }
+                    
+                    </select><br/>
+
+                    <label htmlFor="city">Select a city:</label>
+                    <select name='city' value={user.city} onChange={handleInputs} >
+                    {/* <select id="city" disabled={!states} name='city' onChange={handleSelectedCity} value={selectedCity}> */}
+                        <option value="">--Select a city--</option>
+                        {cities.map((city) => (
+                            <option key={city.id} value={city.name}>
+                                {city.name}
+                            </option>
+                        ))}
+                    </select><br/>
+
 
                     <label htmlFor="email">Email</label>
-                    <input type="text" className="form-control w-25" id="email" placeholder="Your Email" name="email" value={user.email} onChange={handleInputs}/>
+                    <input type="text" className="form-control w-25" id="email" placeholder="Your Email" name="email" value={user.email} onChange={handleInputs} />
 
                     <label htmlFor="pwd">Password</label>
-                    <input type="text" className="form-control w-25" id="pwd" placeholder="Your Password" name="pwd" value={user.pwd} onChange={handleInputs}/>
+                    <input type="text" className="form-control w-25" id="pwd" placeholder="Your Password" name="pwd" value={user.pwd} onChange={handleInputs} />
 
                     <label htmlFor="cpwd">Confirm password</label>
-                    <input type="name" className="form-control w-25" id="cpwd" placeholder="Your password again" name="cpwd" value={user.cpwd} onChange={handleInputs}/>
+                    <input type="text" className="form-control w-25" id="cpwd" placeholder="Your password again" name="cpwd" value={user.cpwd} onChange={handleInputs} />
 
-                    <input className="btn btn-primary" type="submit" value="Signup" onClick={PostData}/>
+                    <input className="btn btn-primary" type="submit" value="Signup" onClick={PostData} />
                 </form>
             </div>
         </div>

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
-const Login = () => {
+const Login = (props) => {
 
   const navigateTo = useNavigate();
 
@@ -38,13 +38,10 @@ const Login = () => {
 
     if(data.status === 422 || !data){
       window.alert("Invalid login!!");
-      console.log("Invalud login!!");
     }else{
       window.alert("valid login!!");
-      console.log("valud login!!");
       localStorage.setItem("TOKEN",data.token);
-      //props.setAuth(data.token);
-
+      props.setAuth(data.token);
       navigateTo("/");
     }
   }
@@ -61,7 +58,7 @@ const Login = () => {
                     <label for="pwd">Password</label>
                     <input type="text" className="form-control w-25 mb-2" id="pwd" placeholder="Your Password" name='pwd' value={user.pwd} onChange={handleInputs}/>
 
-                    <input className="btn btn-primary" type="submit" value="Login" onClick={PostData}></input>
+                    <input className="btn btn-primary" type="submit" value="Login" onClick={PostData}/>
                 </form>
             </div>
     </div>

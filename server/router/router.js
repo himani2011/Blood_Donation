@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/dsignup', async (req, res) => {
-    const { name, age, bloodGroup, pno, apno, email, pwd, cpwd, work } = req.body;
+    const { name, age, bloodGroup, pno, apno, email, pwd, cpwd, work, state,city } = req.body;
 
     //    if(!name|| !age|| !bloodGroup|| !pno|| !apno|| !email|| !pwd|| !cpwd,!work){
     //     return res.status(401).json({message:"PLease fill all the required fields!"});
@@ -33,7 +33,7 @@ router.post('/dsignup', async (req, res) => {
             return res.status(401).json({ message: "Passwords don't match" });
         }
         else {
-            const user = new Donor({ name, age, bloodGroup, pno, apno, email, pwd, cpwd, work });
+            const user = new Donor({ name, age, bloodGroup, pno, apno, email, pwd, cpwd, work, state,city });
             const token = createToken(user._id);
             await user.save();
             res.status(201).json({token});
@@ -45,7 +45,7 @@ router.post('/dsignup', async (req, res) => {
 })
 
 router.post('/osignup', async (req, res) => {
-    const { name, bloodGroups, pno, apno, email, pwd, cpwd, pos } = req.body;
+    const { name, bloodGroups, pno, apno, email, pwd, cpwd, pos, state,city } = req.body;
 
     //    if(!name|| !bloodGroups|| !pno|| !apno|| !email|| !pwd|| !cpwd,!pos){
     //     return res.status(401).json({message:"PLease fill all the required fields!"});
@@ -62,7 +62,7 @@ router.post('/osignup', async (req, res) => {
             return res.status(401).json({ message: "Passwords don't match" });
         }
         else {
-            const org = new Org({ name, bloodGroups, pno, apno, email, pwd, cpwd, pos });
+            const org = new Org({ name, bloodGroups, pno, apno, email, pwd, cpwd, pos, state,city });
             const token = createToken(org._id);
             await org.save();
             res.status(201).json({ token });
@@ -123,7 +123,29 @@ router.get('/profile', requireAuth ,(req,res) =>{
     } catch (error) {
         console.log(error);
     }
+});
+
+router.get('/donorResults/:st/:ct/:bg', async (req,res)=>{
+    let st = req.params.st;
+    let ct = req.params.ct;
+    let bg = req.params.bg;
+
+    filtered= await Donor.find({$or: [{state:st},{city:ct},{bloodGroup:bg}]});
+
+    res.status(201).json(filtered);
 })
+
+// router.get('/orgResults', async (req,res)=>{
+//     try {
+//         const donorData = Donor.find({
+//             $and:[
+//                 {state: {}}
+//             ]
+//         })
+//     } catch (error) {
+//         res.status(401).json({error:"Cannot find any result!"});
+//     }
+// })
 
 
 

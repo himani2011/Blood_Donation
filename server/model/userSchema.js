@@ -28,6 +28,12 @@ const donorSchema = new mongoose.Schema({
     },
     work:{
         type:String
+    },
+    state:{
+        type:String
+    },
+    city:{
+        type:String
     }
 });
 
@@ -54,6 +60,12 @@ const orgSchema = new mongoose.Schema({
         type:String
     },
     pos:{
+        type:String
+    },
+    state:{
+        type:String
+    },
+    city:{
         type:String
     }
 });
