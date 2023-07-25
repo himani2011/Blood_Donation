@@ -1,7 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
+import noteContext from '../context/notes/NoteContext';
 
 const Login = (props) => {
+
+  const a = useContext(noteContext);
 
   const navigateTo = useNavigate();
 
@@ -46,6 +49,10 @@ const Login = (props) => {
     }
   }
 
+  useEffect(()=>{
+    a.update();
+  },[])
+
 
   return (
     <div>
@@ -60,6 +67,7 @@ const Login = (props) => {
 
                     <input className="btn btn-primary" type="submit" value="Login" onClick={PostData}/>
                 </form>
+                {/* This is use of useContext {a.state.name} */}
             </div>
     </div>
   )

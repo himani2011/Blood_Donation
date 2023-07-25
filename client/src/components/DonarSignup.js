@@ -23,8 +23,8 @@ const DonorSignup = (props) => {
 
     const [cities, setCities] = useState([]);
     const [states, setStates] = useState([]);
-    const [selectedState,setSelectedState] = useState("");
-    const [selectedCity,setSelectedCity] = useState("");
+    // const [selectedState,setSelectedState] = useState("");
+    // const [selectedCity,setSelectedCity] = useState("");
 
     const fetchStates = () => {
         const canadaStates = State.getStatesOfCountry("CA");
@@ -32,7 +32,6 @@ const DonorSignup = (props) => {
     }
 
     let selectedSt;
-    let selectedCi;
     const fetchCities = (e) => {
         handleInputs(e);
         selectedSt = e.target.value;
@@ -46,15 +45,15 @@ const DonorSignup = (props) => {
         //console.log(stateCities);
     };
 
-    const handleSelectedState =(sl) =>{
-       setSelectedState(sl);
-       console.log("SElected state:",selectedState);
-    }
+    // const handleSelectedState =(sl) =>{
+    //    setSelectedState(sl);
+    //    console.log("SElected state:",selectedState);
+    // }
 
-    const handleSelectedCity =(e) =>{
-        selectedCi=e.target.value;
-        setSelectedCity(selectedCi);
-     }
+    // const handleSelectedCity =(e) =>{
+    //     selectedCi=e.target.value;
+    //     setSelectedCity(selectedCi);
+    //  }
 
     let name, value;
     const handleInputs = (e) => {

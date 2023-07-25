@@ -6,7 +6,6 @@ const OrgSignup = (props) => {
 
     const navigateTo = useNavigate();
     
-
     const [user,setUser] = useState({
         name:"",
         bloodGroups:[],
@@ -29,13 +28,13 @@ const OrgSignup = (props) => {
     }
 
     let selectedSt;
-    const fetchCities = (e) => {
 
+    const fetchCities = (e) => {
+        handleInputs(e);
         selectedSt = e.target.value;
-        console.log(selectedSt);
         const stateCities = City.getCitiesOfState("CA", selectedSt);
         setCities(stateCities);
-        console.log(stateCities);
+        console.log("selected state is ",selectedSt);
     };
 
     let name,value,isChecked;
@@ -145,7 +144,7 @@ const OrgSignup = (props) => {
                     <br/>
 
                     <label htmlFor="state">Select a state:</label>
-                    <select id="state" onChange={fetchCities} value={selectedSt}>
+                    <select id="state" name="state" onChange={fetchCities} value={user.state}>
                         <option value="">-- Select State --</option>
                         {
                             states.map((state) => (
@@ -158,7 +157,7 @@ const OrgSignup = (props) => {
                     </select><br/>
 
                     <label htmlFor="city">Select a city:</label>
-                    <select id="city" disabled={!states}>
+                    <select id="city" name="city" disabled={!states} value={user.city} onChange={handleInputs}>
                         <option value="">--Select a city--</option>
                         {cities.map((city) => (
                             <option key={city.id} value={city.name}>

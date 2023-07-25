@@ -66,6 +66,7 @@ router.post('/osignup', async (req, res) => {
             const token = createToken(org._id);
             await org.save();
             res.status(201).json({ token });
+            console.log("Saved org:  ",org);
         }
     } catch (error) {
         console.log(error);
@@ -131,6 +132,17 @@ router.get('/donorResults/:st/:ct/:bg', async (req,res)=>{
     let bg = req.params.bg;
 
     filtered= await Donor.find({$and: [{state:st},{city:ct},{bloodGroup:bg}]});
+
+    res.status(201).json(filtered);
+})
+
+router.get('/orgResults/:st/:ct/:bg', async (req,res)=>{
+    let st = req.params.st;
+    let ct = req.params.ct;
+    let bg = req.params.bg;
+    
+    filtered= await Org.find({$and: [{state:st},{city:ct},{ bloodGroups: { $in: bg } }]});
+    console.log("Filtered: ",filtered);
 
     res.status(201).json(filtered);
 })

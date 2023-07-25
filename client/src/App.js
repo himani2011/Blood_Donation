@@ -9,6 +9,7 @@ import Profile from './components/Profile';
 import ErrorPage from './components/ErrorPage';
 import Logout from './components/Logout';
 import { Routes, Route } from 'react-router-dom';
+import NoteState from './context/notes/NoteState';
 
 const App = () => {
 
@@ -21,6 +22,7 @@ const App = () => {
 
   return (
     <div>
+      <NoteState>
       <Navbar auth={auth}/>
 
       <Routes>
@@ -33,7 +35,7 @@ const App = () => {
         <Route path='/logout' element={<Logout setAuth={setAuth}/>} />
         <Route path='/*' element={<ErrorPage/>} />
       </Routes>
-
+      </NoteState>
     </div>
   )
 }
