@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { State, City } from 'country-state-city';
+import Spinner from './Spinner';
 import "../styles.css";
 
 const Home = () => {
+
+    //for spinner
+    const [spin,setSpin] = useState(false);
 
     const [states, setStates] = useState([]);
     const [cities, setCities] = useState([]);
@@ -43,6 +47,7 @@ const Home = () => {
     }
 
     const getDonors = async (e) => {
+        setSpin(true);
         e.preventDefault();
         let state = st;
         let bgroup = bg;
@@ -58,10 +63,12 @@ const Home = () => {
             const results = await res.json();
 
             if (!results) {
+                setSpin(false);
                 alert("No results found!");
             } else {
                 setShow(results);
             }
+            setSpin(false);
         } catch (error) {
             console.log(error);
         }
@@ -69,6 +76,7 @@ const Home = () => {
     }
 
     const getOrgs = async (e) => {
+        setSpin(true);
         e.preventDefault();
         let state = st;
         let city = ct;
@@ -82,15 +90,17 @@ const Home = () => {
                 }
             });
             const results = await res.json();
-            console.log("Results",results);
+            // console.log("Results",results);
 
             if (results.length === 0) {
+                setSpin(false);
                 alert("No results found!");
             } else {
                 setOrgShow(results);
             }
+            setSpin(false);
         } catch (error) {
-        //console.log(error);
+        
         }
 
     }
@@ -103,10 +113,10 @@ const Home = () => {
 
     return (
         <div>
-            <div class="signup-form">
-                <div class="form-field">
+            <div className="signup-form">
+                <div className="form-field">
                 {/* <label htmlFor="state">Select a state: </label> */}
-                <select className="custom-select" id="state" onChange={handleState} value={selectedSt}>
+                <select className="bgroup" id="state" onChange={handleState} value={selectedSt}>
                         <option value="">-- Select State --</option>
                         {
                             states.map((state) => (
@@ -117,10 +127,10 @@ const Home = () => {
                         }
                     </select>
                 </div>
-                <div class="divider"></div>
-                <div class="form-field">
+                <div className="divider"></div>
+                <div className="form-field">
                 {/* <label htmlFor="city">Select a city:</label> */}
-                    <select id="city" disabled={!states} onChange={handleCity}>
+                    <select className='bgroup' id="city" disabled={!states} onChange={handleCity}>
                         <option value="">--Select a city--</option>
                         {cities.map((city) => (
                             <option key={city.id} value={city.name}>
@@ -130,9 +140,9 @@ const Home = () => {
                     </select>
                 </div>
 
-                <div class="divider"></div>
-                <div class="form-field">
-                <select name='bloodGroup' onChange={handleBg}>
+                <div className="divider"></div>
+                <div className="form-field">
+                <select className='bgroup' name='bloodGroup' onChange={handleBg}>
                         <option>Select blood group</option>
                         <option value="AP">A+</option>
                         <option value="AN">A-</option>
@@ -145,92 +155,64 @@ const Home = () => {
                     </select>
                 </div>
 
-                <div class="form-field">
-                <button class="submit" type="submit" onClick={getDonors}>
+                <div className="form-field">
+                <button className="submit" type="submit" onClick={getDonors}>
                     Search Donors
                 </button>
                 </div>
+
+                {spin && <Spinner/>}
                 
-                <div class="form-field">
-                <button class="submit" type="submit" onClick={getOrgs}>
+                <div className="form-field">
+                <button className="submit" type="submit" onClick={getOrgs}>
                     Search Organizations
                 </button>
                 </div>
 
-            </div>
-            {/* <div className='box'>
-                <form className="d-flex w-75 p-3" role="search">
+                {spin && <Spinner/>}
 
-                    <label htmlFor="state">Select a state:</label>
-                    <select id="state" onChange={handleState} value={selectedSt}>
-                        <option value="">-- Select State --</option>
-                        {
-                            states.map((state) => (
-                                <option name={state.name} key={state.isoCode} value={state.isoCode}>
-                                    {state.name}
-                                </option>
-                            ))
+            </div>
+
+            <h2 style={{padding:25}}><u>Donor Results</u></h2>
+            {
+
+            !spin && <div className='box'>
+
+            <table className="table">
+                <thead>
+                    
+                    <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Contact</th>
+                    <th scope="col">contact 2</th>
+                    <th scope="col">State</th>
+                    <th scope="col">City</th>
+                    </tr>
+                    
+                </thead>
+                <tbody>
+                {
+                    show.map((elem) => {
+                    return <tr>
+                    <td>{elem.name}</td>
+                    <td>{elem.pno}</td>
+                    <td>{elem.apno}</td>
+                    <td>{elem.state}</td>
+                    <td>{elem.city}</td>
+                    </tr>
+                    })
                         }
-                    </select>
-
-                    <label htmlFor="city">Select a city:</label>
-                    <select id="city" disabled={!states} onChange={handleCity}>
-                        <option value="">--Select a city--</option>
-                        {cities.map((city) => (
-                            <option key={city.id} value={city.name}>
-                                {city.name}
-                            </option>
-                        ))}
-                    </select>
-
-                    <select name='bloodGroup' onChange={handleBg}>
-                        <option>Select blood group</option>
-                        <option value="AP">A+</option>
-                        <option value="AN">A-</option>
-                        <option value="BP">B+</option>
-                        <option value="BN">B-</option>
-                        <option value="OP">O+</option>
-                        <option value="ON">O-</option>
-                        <option value="ABP">AB+</option>
-                        <option value="ABN">AB-</option>
-                    </select>
-                    <button className="btn btn-outline-success ml-3" type="submit" onClick={getDonors}>Search Donors</button>
-                    <button className="btn btn-outline-success ml-3" type="submit" onClick={getOrgs}>Search Organizations</button>
-                </form>
-            </div> */}
-            <h2 style={{padding:10}}><u>Donor Results</u></h2>
-            <div className='box'>
-
-                <table className="table">
-                    <thead>
-                        
-                        <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Contact</th>
-                        <th scope="col">contact 2</th>
-                        <th scope="col">State</th>
-                        <th scope="col">City</th>
-                        </tr>
-                        
-                    </thead>
-                    <tbody>
-                    {
-                        show.map((elem) => {
-                        return <tr>
-                        <td>{elem.name}</td>
-                        <td>{elem.pno}</td>
-                        <td>{elem.apno}</td>
-                        <td>{elem.state}</td>
-                        <td>{elem.city}</td>
-                        </tr>
-                        })
-                            }
-                    </tbody>
-                </table>
+                </tbody>
+            </table>
             </div>
 
-            <h2 style={{padding:10}}><u>Organization Results</u></h2>
-            <div className='box'>
+            }
+            
+
+            <h2 style={{padding:25}}><u>Organization Results</u></h2>
+            {
+
+                !spin && <div className='box'>
 
                 <table className="table">
                     <thead>
@@ -258,7 +240,9 @@ const Home = () => {
                             }
                     </tbody>
                 </table>
-            </div>
+                </div>
+            }
+            
         </div>
     )
 }

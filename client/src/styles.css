@@ -1,7 +1,7 @@
 
  .signup-form {
     display: flex;
-    height: 3.75rem;
+    height: 5rem;
     align-items: center;
     box-shadow: 
       0 0 40px rgba(0,0,0, .1),
@@ -51,16 +51,16 @@
     }
   }
   .submit {
-    background: #239488;
+    background: #0a0a0a;
     align-self: center;
     display: flex;
     align-items: center;
     color: white;
-    padding: 1rem;
+    padding: 0.5rem;
     border: none;
     cursor: pointer;
-    padding: 3;
-    
+    margin-top: 5px;
+    width: 100%;
     &:focus {
       outline: none;
     }
@@ -72,3 +72,4 @@
     align-self: stretch;
     margin: .5rem 0;
   }
+  

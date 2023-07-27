@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { State,City} from 'country-state-city';
+import '../loginstyle.css';
 
 
 const DonorSignup = (props) => {
@@ -35,25 +36,9 @@ const DonorSignup = (props) => {
     const fetchCities = (e) => {
         handleInputs(e);
         selectedSt = e.target.value;
-        //console.log(selectedSt);
-        //setSelectedState(selectedSt);
-        //console.log(selectedState);
         const stateCities = City.getCitiesOfState("CA", selectedSt);
         setCities(stateCities);
-        //handleInputs(selectedSt);
-        //handleSelectedState(selectedSt);
-        //console.log(stateCities);
     };
-
-    // const handleSelectedState =(sl) =>{
-    //    setSelectedState(sl);
-    //    console.log("SElected state:",selectedState);
-    // }
-
-    // const handleSelectedCity =(e) =>{
-    //     selectedCi=e.target.value;
-    //     setSelectedCity(selectedCi);
-    //  }
 
     let name, value;
     const handleInputs = (e) => {
@@ -97,18 +82,18 @@ const DonorSignup = (props) => {
 
     return (
         <div>
+            <div className="signup-container">
+                <div className="form-container" id="login-form">
+                    <h1>Donar Signup</h1>
+                    <form>
+                        <label htmlFor="name">Name</label>
+                        <input type="text" id="name" name="name" required value={user.name} onChange={handleInputs} />
 
-            <div className="mb-3 box">
-                <form method='POST' className='register-form' id='register-form'>
-                    <label htmlFor="name">Name</label>
-                    <input type="text" className="form-control w-25" id="name" placeholder="Your name" name="name" value={user.name} onChange={handleInputs} />
+                        <label htmlFor="age">Age</label>
+                        <input type="number" id="age" name="age" required value={user.age} onChange={handleInputs} />
 
-                    <label htmlFor="age">Age</label>
-                    <input type="number" className="form-control w-25" id="age" placeholder="Your age" name="age" value={user.age} onChange={handleInputs} />
-
-                    <label htmlFor="bgroup">Blood group </label>
-    
-                    <select name='bloodGroup' value={user.bloodGroup} onChange={handleInputs} >
+                        <label htmlFor="bgroup">Blood Group</label>
+                        <select className='bgroup' name='bloodGroup' value={user.bloodGroup} onChange={handleInputs} >
                         <option>Select blood group</option>
                         <option value="AP">A+</option>
                         <option value="AN">A-</option>
@@ -119,19 +104,18 @@ const DonorSignup = (props) => {
                         <option value="ABP">AB+</option>
                         <option value="ABN">AB-</option>
                     </select>
-                    <br/>
 
                     <label htmlFor="pno">Phone number</label>
-                    <input type="number" className="form-control w-25" id="pno" placeholder="Your phone number" name="pno" value={user.pno} onChange={handleInputs} />
+                    <input type="tel" id="pno" name="pno" required value={user.pno} onChange={handleInputs} />
 
                     <label htmlFor="apno">Alternate phone number</label>
-                    <input type="number" className="form-control w-25" id="apno" placeholder="Your Alternate phone number" name="apno" value={user.apno} onChange={handleInputs} />
+                    <input type="tel" id="apno" name="apno" required value={user.apno} onChange={handleInputs} />
 
                     <label htmlFor="work">Profession</label>
-                    <input type="text" className="form-control w-25" id="work" placeholder="Your Profession" name="work" value={user.work} onChange={handleInputs} />
+                    <input type="text" id="work" name="work" required value={user.work} onChange={handleInputs} />
 
                     <label htmlFor="state">Select a state:</label>
-                    <select id="state" name='state' onChange={fetchCities} value={user.state}>
+                    <select className="bgroup" id="state" name='state' onChange={fetchCities} value={user.state}>
                         <option value="">-- Select State --</option>
                         {
                             states.map((state) => (
@@ -141,10 +125,10 @@ const DonorSignup = (props) => {
                             ))
                         }
                     
-                    </select><br/>
+                    </select>
 
                     <label htmlFor="city">Select a city:</label>
-                    <select name='city' value={user.city} onChange={handleInputs} >
+                    <select className="bgroup" name='city' value={user.city} onChange={handleInputs} >
                     {/* <select id="city" disabled={!states} name='city' onChange={handleSelectedCity} value={selectedCity}> */}
                         <option value="">--Select a city--</option>
                         {cities.map((city) => (
@@ -152,20 +136,22 @@ const DonorSignup = (props) => {
                                 {city.name}
                             </option>
                         ))}
-                    </select><br/>
-
+                    </select>
 
                     <label htmlFor="email">Email</label>
-                    <input type="text" className="form-control w-25" id="email" placeholder="Your Email" name="email" value={user.email} onChange={handleInputs} />
+                    <input type="email" id="email" name="email" required value={user.email} onChange={handleInputs} />
 
                     <label htmlFor="pwd">Password</label>
-                    <input type="text" className="form-control w-25" id="pwd" placeholder="Your Password" name="pwd" value={user.pwd} onChange={handleInputs} />
+                    <input type="password" id="pwd" name="pwd" required value={user.pwd} onChange={handleInputs} />
 
-                    <label htmlFor="cpwd">Confirm password</label>
-                    <input type="text" className="form-control w-25" id="cpwd" placeholder="Your password again" name="cpwd" value={user.cpwd} onChange={handleInputs} />
+                    <label htmlFor="pwd">Confirm password</label>
+                    <input type="password" id="cpwd" name="cpwd" required value={user.cpwd} onChange={handleInputs} />
 
-                    <input className="btn btn-primary" type="submit" value="Signup" onClick={PostData} />
-                </form>
+                    <button type="submit" value="Signup" onClick={PostData}>Signup</button>
+                    </form>
+                    <p>Have an account? <NavLink to='/login' id="signup-link"><u>Login</u></NavLink>
+                    </p>
+                </div>
             </div>
         </div>
     )

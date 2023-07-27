@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import Home from './components/Home';
-import Admin from './components/Admin';
+//import Admin from './components/Admin';
+import FAQ from './components/FAQ';
 import Login from './components/Login';
 import DonorSignup from './components/DonarSignup';
 import OrgSignup from './components/OrgSignup';
@@ -33,6 +34,7 @@ const App = () => {
         {/* <Route path="/admin" element={<Admin />} /> */}
         <Route path='/profile' element={<Profile/>} />
         <Route path='/logout' element={<Logout setAuth={setAuth}/>} />
+        <Route path='/faq' element={<FAQ />} />
         <Route path='/*' element={<ErrorPage/>} />
       </Routes>
       </NoteState>

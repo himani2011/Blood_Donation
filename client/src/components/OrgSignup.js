@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { State, City} from 'country-state-city';
+import '../loginstyle.css';
 
 const OrgSignup = (props) => {
 
@@ -92,59 +93,62 @@ const OrgSignup = (props) => {
 
   return (
     <div>
-      <div className="mb-3 box">
-                <form method='POST' className='register-form' id='register-form'>
-                    <label htmlFor="name">Name</label>
-                    <input type="text" className="form-control w-25" id="name" placeholder="Your name"  name='name'  value={user.name} onChange={handleInputs}/>
 
-                    <label htmlFor="pos">Position</label>
-                    <input type="text" className="form-control w-25" id="pos" placeholder="Your Position" name='pos'  value={user.pos} onChange={handleInputs}/>
+<div className="org-container">
+                <div className="form-container" id="login-form">
+                    <h1>Organization Signup</h1>
+                    <form>
+                        <label htmlFor="name">Name</label>
+                        <input type="text" id="name" name="name" required value={user.name} onChange={handleInputs} />
 
-                    <label htmlFor="pno">Phone number</label>
-                    <input type="number" className="form-control w-25" id="pno" placeholder="Your phone number" name='pno' value={user.pno} onChange={handleInputs}/>
+                        <label htmlFor="pos">Position</label>
+                        <input type="text" id="pos" name="pos" required value={user.pos} onChange={handleInputs} />
 
-                    <label htmlFor="apno">Alternate phone number</label>
-                    <input type="number" className="form-control w-25" id="apno" placeholder="Your Alternate phone number" name='apno' value={user.apno} onChange={handleInputs}/>
+                        <label htmlFor="pno">Phone number</label>
+                        <input type="tel" id="pno" name="pno" required value={user.pno} onChange={handleInputs} />
 
-                    <label>Available blood groups with you:</label><br/>
-                    <div className="form-check form-check-inline">
+                        <label htmlFor="apno">Alternate phone number</label>
+                        <input type="tel" id="apno" name="apno" required value={user.apno} onChange={handleInputs} />
+
+                        <label>Available blood groups with you:</label><br/>
+                    <div className="bgroup">
                         <input className="form-check-input" type="checkbox" id="ap" name='bloodGroups' value="AP" checked={user.bloodGroups.includes('AP')} onChange={handleCheckbox}/>
                             <label className="form-check-label" htmlFor="ap">A+</label>
                     </div>
-                    <div className="form-check form-check-inline">
+                    <div className="bgroup">
                         <input className="form-check-input" type="checkbox" id="an" name='bloodGroups' value="AN" checked={user.bloodGroups.includes('AN')} onChange={handleCheckbox}/>
                             <label className="form-check-label" htmlFor="an">A-</label>
                     </div>
-                    <div className="form-check form-check-inline">
+                    <div className="bgroup">
                         <input className="form-check-input" type="checkbox" id="bp" name='bloodGroups' value="BP" checked={user.bloodGroups.includes('BP')} onChange={handleCheckbox}/>
                             <label className="form-check-label" htmlFor="bp">B+</label>
                     </div>
-                    <div className="form-check form-check-inline">
+                    <div className="bgroup">
                         <input className="form-check-input" type="checkbox" id="bn" name='bloodGroups' value="BN" checked={user.bloodGroups.includes('BN')} onChange={handleCheckbox} />
                             <label className="form-check-label" htmlFor="bn">B-</label>
                     </div>
-                    <div className="form-check form-check-inline">
+                    <div className="bgroup">
                         <input className="form-check-input" type="checkbox" id="op" name='bloodGroups' value="OP" checked={user.bloodGroups.includes('OP')} onChange={handleCheckbox} />
                             <label className="form-check-label" htmlFor="op">O+</label>
                     </div>
-                    <div className="form-check form-check-inline">
+                    <div className="bgroup">
                         <input className="form-check-input" type="checkbox" id="on" name='bloodGroups' value="ON" checked={user.bloodGroups.includes('ON')} onChange={handleCheckbox} />
                             <label className="form-check-label" htmlFor="on">O-</label>
                     </div>
                     
-                    <div className="form-check form-check-inline">
+                    <div className="bgroup">
                         <input className="form-check-input" type="checkbox" id="abp" name='bloodGroups' value="ABP" checked={user.bloodGroups.includes('ABP')} onChange={handleCheckbox} />
                             <label className="form-check-label" htmlFor="abp">AB+</label>
                     </div>
 
-                    <div className="form-check form-check-inline">
+                    <div className="bgroup">
                         <input className="form-check-input" type="checkbox" id="abn" name='bloodGroups' value="ABN" checked={user.bloodGroups.includes('ABN')} onChange={handleCheckbox} />
                             <label className="form-check-label" htmlFor="abn">AB-</label>
                     </div>
-                    <br/>
+
 
                     <label htmlFor="state">Select a state:</label>
-                    <select id="state" name="state" onChange={fetchCities} value={user.state}>
+                    <select className='bgroup' id="state" name="state" onChange={fetchCities} value={user.state}>
                         <option value="">-- Select State --</option>
                         {
                             states.map((state) => (
@@ -157,29 +161,29 @@ const OrgSignup = (props) => {
                     </select><br/>
 
                     <label htmlFor="city">Select a city:</label>
-                    <select id="city" name="city" disabled={!states} value={user.city} onChange={handleInputs}>
+                    <select className='bgroup' id="city" name="city" disabled={!states} value={user.city} onChange={handleInputs}>
                         <option value="">--Select a city--</option>
                         {cities.map((city) => (
                             <option key={city.id} value={city.name}>
                                 {city.name}
                             </option>
                         ))}
-                    </select><br/>
-                
-
-            
+                    </select>
 
                     <label htmlFor="email">Email</label>
-                    <input type="text" className="form-control w-25" id="email" placeholder="Your Email" name='email' value={user.email} onChange={handleInputs}/>
+                    <input type="email" id="email" name="email" required value={user.email} onChange={handleInputs} />
 
                     <label htmlFor="pwd">Password</label>
-                    <input type="text" className="form-control w-25" id="pwd" placeholder="Your Password" name='pwd' value={user.pwd} onChange={handleInputs}/>
+                    <input type="password" id="pwd" name="pwd" required value={user.pwd} onChange={handleInputs} />
 
-                    <label htmlFor="cpwd">Confirm password</label>
-                    <input type="name" className="form-control w-25" id="cpwd" placeholder="Your password again" name='cpwd' value={user.cpwd} onChange={handleInputs}/>
+                    <label htmlFor="pwd">Confirm password</label>
+                    <input type="password" id="cpwd" name="cpwd" required value={user.cpwd} onChange={handleInputs} />
 
-                    <input className="btn btn-primary" type="submit" value="Signup" onClick={PostData}/>
-                </form>
+                    <button type="submit" value="Signup" onClick={PostData}>Register</button>
+                    </form>
+                    <p>Have an account? <NavLink to='/login' id="signup-link"><u>Login</u></NavLink>
+                    </p>
+                </div>
             </div>
     </div>
   )
