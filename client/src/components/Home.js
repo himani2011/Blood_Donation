@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { State, City } from 'country-state-city';
+import {ToastContainer,toast} from 'react-toastify';
 import Spinner from './Spinner';
 import "../styles.css";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
 
@@ -33,27 +35,49 @@ const Home = () => {
         selectedSt = e.target.value;
         setSt(selectedSt);
         console.log("selected st: ", selectedSt);
-        fetchCities(selectedSt);
+        if(selectedSt === ""){
+            alert("Please select a valid state!");
+        }else{
+            fetchCities(selectedSt);
+        }
+        
     }
     const handleCity = (e) => {
         selectedCity = e.target.value;
-        setCt(selectedCity);
-        console.log("Selected city: ", selectedCity);
+        if(selectedCity === ""){
+            alert("Please select a valid city!");
+        }else{
+            setCt(selectedCity);
+            console.log("Selected city: ", selectedCity);
+        }
+       
     }
     const handleBg = (e) => {
         selectedBg = e.target.value;
         console.log("bg: ", selectedBg);
-        setBg(selectedBg);
+        if(selectedBg === ""){
+            alert("Please select a valid blood group!");
+        }else{
+            setBg(selectedBg);
+            console.log("Selected bg: ", selectedBg);
+        }
+        
     }
 
     const getDonors = async (e) => {
+        setShow([]);
         setSpin(true);
         e.preventDefault();
         let state = st;
         let bgroup = bg;
         let city = ct;
 
+        if(!state || !city || !bgroup){
+            alert("Please select valid state, city and bloodgroup!!");
+        }
+
         try {
+            
             const res = await fetch(`/donorResults/${state}/${city}/${bgroup}`, {
                 method: "GET",
                 headers: {
@@ -62,26 +86,36 @@ const Home = () => {
             });
             const results = await res.json();
 
-            if (!results) {
+            if (results.length === 0) {  //res.status === 201
+                // setTimeout(()=>{
+                //     setSpin(false);
+                // },500);
                 setSpin(false);
                 alert("No results found!");
             } else {
+                setSpin(false);
                 setShow(results);
             }
             setSpin(false);
+
         } catch (error) {
+            setSpin(false);
             console.log(error);
         }
-
     }
 
     const getOrgs = async (e) => {
+        setOrgShow([]);
         setSpin(true);
         e.preventDefault();
         let state = st;
         let city = ct;
         let bgroup = bg;
 
+        if(!state || !city || !bgroup){
+            alert("Please select valid state, city and bloodgroup!!");
+        }
+        
         try {
             const res = await fetch(`/orgResults/${state}/${city}/${bgroup}`, {
                 method: "GET",
@@ -90,7 +124,6 @@ const Home = () => {
                 }
             });
             const results = await res.json();
-            // console.log("Results",results);
 
             if (results.length === 0) {
                 setSpin(false);
@@ -99,12 +132,12 @@ const Home = () => {
                 setOrgShow(results);
             }
             setSpin(false);
+            
         } catch (error) {
-        
+            setSpin(false);
+            console.log(error);
         }
-
     }
-
 
     useEffect(() => {
         fetchStates();
@@ -116,7 +149,7 @@ const Home = () => {
             <div className="signup-form">
                 <div className="form-field">
                 {/* <label htmlFor="state">Select a state: </label> */}
-                <select className="bgroup" id="state" onChange={handleState} value={selectedSt}>
+                <select className="bgroup" id="state" onChange={handleState} value={selectedSt} required>
                         <option value="">-- Select State --</option>
                         {
                             states.map((state) => (
@@ -129,8 +162,7 @@ const Home = () => {
                 </div>
                 <div className="divider"></div>
                 <div className="form-field">
-                {/* <label htmlFor="city">Select a city:</label> */}
-                    <select className='bgroup' id="city" disabled={!states} onChange={handleCity}>
+                    <select className='bgroup' id="city" disabled={!states} onChange={handleCity} required>
                         <option value="">--Select a city--</option>
                         {cities.map((city) => (
                             <option key={city.id} value={city.name}>
@@ -142,8 +174,8 @@ const Home = () => {
 
                 <div className="divider"></div>
                 <div className="form-field">
-                <select className='bgroup' name='bloodGroup' onChange={handleBg}>
-                        <option>Select blood group</option>
+                <select className='bgroup' name='bloodGroup' onChange={handleBg} required>
+                        <option value="">Select blood group</option>
                         <option value="AP">A+</option>
                         <option value="AN">A-</option>
                         <option value="BP">B+</option>
@@ -159,23 +191,33 @@ const Home = () => {
                 <button className="submit" type="submit" onClick={getDonors}>
                     Search Donors
                 </button>
+                <ToastContainer
+                 position="top-center"
+                 autoClose={2000}
+                 newestOnTop
+                 closeOnClick={true}
+                 rtl={false}
+                 draggable
+                 pauseOnHover={false}
+                 theme="dark"/>
                 </div>
 
-                {spin && <Spinner/>}
-                
                 <div className="form-field">
                 <button className="submit" type="submit" onClick={getOrgs}>
                     Search Organizations
                 </button>
                 </div>
-
-                {spin && <Spinner/>}
-
             </div>
 
-            <h2 style={{padding:25}}><u>Donor Results</u></h2>
             {
+            !spin && <h2 style={{padding:25}}><u>Donor Results</u></h2>
+            }
+            {
+                spin && <center style={{marginTop:"100px"}}><Spinner/></center>
+            }
 
+            {
+ 
             !spin && <div className='box'>
 
             <table className="table">
@@ -208,8 +250,12 @@ const Home = () => {
 
             }
             
-
-            <h2 style={{padding:25}}><u>Organization Results</u></h2>
+            {
+            !spin && <h2 style={{padding:25}}><u>Organization Results</u></h2>
+            }
+            {
+                spin && <center style={{marginTop:"100px"}}><Spinner/></center>
+            }
             {
 
                 !spin && <div className='box'>
@@ -240,8 +286,10 @@ const Home = () => {
                             }
                     </tbody>
                 </table>
+                        
                 </div>
             }
+       
             
         </div>
     )

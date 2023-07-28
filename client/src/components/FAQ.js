@@ -20,7 +20,7 @@ const FAQ = () => {
   return (
     <div>
       <section className="faq" style={{paddingLeft: 20}}>
-    <h2 className='h2-faq'>Frequently Asked Questions</h2>
+    <h2 className='h2-faq' style={{marginTop:"20px",marginBottom:"20px"}}><u>Frequently Asked Questions</u></h2>
 
     <div class="faq-container">
       <details class="faq-box" open>

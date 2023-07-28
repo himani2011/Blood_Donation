@@ -2,21 +2,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    height: 70vh;
   }
 
   .signup-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 220vh;
+    height: 230vh;
   }
 
   .org-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 310vh;
+    height: 318vh;
   }
   
   .form-container {

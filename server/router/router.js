@@ -131,6 +131,10 @@ router.get('/donorResults/:st/:ct/:bg', async (req,res)=>{
     let ct = req.params.ct;
     let bg = req.params.bg;
 
+    // if (!st || !ct || !bg) {
+    //     res.status(401).json({ message: "please fill all the fields" });
+    // }
+
     filtered= await Donor.find({$and: [{state:st},{city:ct},{bloodGroup:bg}]});
 
     res.status(201).json(filtered);
@@ -146,19 +150,5 @@ router.get('/orgResults/:st/:ct/:bg', async (req,res)=>{
 
     res.status(201).json(filtered);
 })
-
-// router.get('/orgResults', async (req,res)=>{
-//     try {
-//         const donorData = Donor.find({
-//             $and:[
-//                 {state: {}}
-//             ]
-//         })
-//     } catch (error) {
-//         res.status(401).json({error:"Cannot find any result!"});
-//     }
-// })
-
-
 
 module.exports = router;

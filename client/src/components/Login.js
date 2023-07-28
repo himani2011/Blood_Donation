@@ -31,6 +31,7 @@ const Login = (props) => {
     setSpin(true);
     const { email, pwd } = user;
 
+
     try {
 
       const res = await fetch("/login", {
@@ -47,7 +48,7 @@ const Login = (props) => {
       //parses the text as json, which was string earlier as we just saw
       const data = await res.json();
   
-      if (res.status === 201 || !res) {
+      if (res.status === 201) {
 
         setTimeout(()=>{
           setSpin(false);
@@ -57,25 +58,26 @@ const Login = (props) => {
           localStorage.setItem("TOKEN", data.token);
           props.setAuth(data.token);
           toast.success("Login successful");
-        },1000);
+        },800);
         
         setTimeout(()=>{
           navigateTo("/");
         },2500);
         
-      } else {
-
+      } else if(!email||!pwd){
+        setSpin(false);
+        toast.error("Please fill all the details!");
+    }
+    else{
         setTimeout(()=>{
           setSpin(false);
-        },1000);
+        },500);
   
         setTimeout(()=>{
           toast.error("Invalid Credentials! Please try again!");
-        },1500);
-
-        setUser([]);
-        
+        },800);
       }
+      setUser([]);
       
     } catch (error) {
       setSpin(false);
@@ -91,12 +93,14 @@ const Login = (props) => {
   return (
     <div>
         {/* This is use of useContext {a.state.name} */}
+     
      {
-     spin && <Spinner/>
+     spin && <center style={{marginTop:"100px"}}><Spinner/></center>
      }
+    
      {
       !spin && <div className="container">
-        <div className="form-container" id="login-form">
+        <div className="form-container" id="login-form" style={{marginTop:"20px"}}>
           <h1>Login</h1>
           <form>
             <label htmlFor="email">Email</label>

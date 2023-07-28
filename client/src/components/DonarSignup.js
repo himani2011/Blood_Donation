@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { State,City} from 'country-state-city';
 import '../loginstyle.css';
+import Spinner from './Spinner';
+import 'react-toastify/dist/ReactToastify.css'
+import {ToastContainer,toast} from 'react-toastify';
 
 
 const DonorSignup = (props) => {
 
     const navigateTo = useNavigate();
+    const [spin,setSpin] = useState(false);
 
     const [user, setUser] = useState({
         name: "",
@@ -24,9 +28,7 @@ const DonorSignup = (props) => {
 
     const [cities, setCities] = useState([]);
     const [states, setStates] = useState([]);
-    // const [selectedState,setSelectedState] = useState("");
-    // const [selectedCity,setSelectedCity] = useState("");
-
+    
     const fetchStates = () => {
         const canadaStates = State.getStatesOfCountry("CA");
         setStates(canadaStates);
@@ -50,29 +52,59 @@ const DonorSignup = (props) => {
 
     const PostData = async (e) => {
         e.preventDefault();
+        setSpin(true);
 
         const { name, age, bloodGroup, pno, apno, email, pwd, cpwd, work, state, city } = user;
 
-        const res = await fetch("/dsignup", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                name, age, bloodGroup, pno, apno, email, pwd, cpwd, work,state, city
-            })
-        });
-
-
-        const data = await res.json();
-        if (data.status === 422 || !data) {
-            window.alert("Invalid registration!!");
+        if(!name || !age || !bloodGroup || !pno || !apno || !email || !pwd || !cpwd || !work || !state ||!city){
+            alert("Please fill all the details in the form! ");
         }
-        else {
-            localStorage.setItem("TOKEN", data.token);
-            props.setAuth(data.token);
-            navigateTo("/");
+
+        try {
+            const res = await fetch("/dsignup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name, age, bloodGroup, pno, apno, email, pwd, cpwd, work,state, city
+                })
+            });
+    
+    
+            const data = await res.json();
+    
+            if (res.status === 201 ) { // || res
+                setTimeout(()=>{
+                  setSpin(false);
+                },500);
+        
+                setTimeout(()=>{
+                    localStorage.setItem("TOKEN",data.token);
+                    props.setAuth(data.token);
+                  toast.success("Registration successful");
+                },800);
+                
+                setTimeout(()=>{
+                  navigateTo("/");
+                },2500);
+    
+              } else {
+                setTimeout(()=>{
+                  setSpin(false);
+                },500);
+          
+                setTimeout(()=>{
+                  toast.error("Email already in use or you have not filled all the details!");
+                },800);
+                
+              }
+              setUser([]);
+        } catch (error) {
+            setSpin(false);
+            console.log(error);
         }
+        
     }
 
     useEffect(() => {
@@ -82,17 +114,24 @@ const DonorSignup = (props) => {
 
     return (
         <div>
-            <div className="signup-container">
+            {
+                spin && <center style={{marginTop:"100px"}}><Spinner/></center>
+            }
+            {
+
+            
+            !spin && <div className="signup-container">
                 <div className="form-container" id="login-form">
                     <h1>Donar Signup</h1>
+                    <h6 style={{color:"red",marginTop:"20px"}}>(All the fields in this form are required to be filled)</h6>
                     <form>
-                        <label htmlFor="name">Name</label>
+                        <label htmlFor="name">Name *</label>
                         <input type="text" id="name" name="name" required value={user.name} onChange={handleInputs} />
 
-                        <label htmlFor="age">Age</label>
+                        <label htmlFor="age">Age *</label>
                         <input type="number" id="age" name="age" required value={user.age} onChange={handleInputs} />
 
-                        <label htmlFor="bgroup">Blood Group</label>
+                        <label htmlFor="bgroup">Blood Group *</label>
                         <select className='bgroup' name='bloodGroup' value={user.bloodGroup} onChange={handleInputs} >
                         <option>Select blood group</option>
                         <option value="AP">A+</option>
@@ -105,16 +144,16 @@ const DonorSignup = (props) => {
                         <option value="ABN">AB-</option>
                     </select>
 
-                    <label htmlFor="pno">Phone number</label>
+                    <label htmlFor="pno">Phone number*</label>
                     <input type="tel" id="pno" name="pno" required value={user.pno} onChange={handleInputs} />
 
-                    <label htmlFor="apno">Alternate phone number</label>
+                    <label htmlFor="apno">Alternate phone number *</label>
                     <input type="tel" id="apno" name="apno" required value={user.apno} onChange={handleInputs} />
 
-                    <label htmlFor="work">Profession</label>
+                    <label htmlFor="work">Profession *</label>
                     <input type="text" id="work" name="work" required value={user.work} onChange={handleInputs} />
 
-                    <label htmlFor="state">Select a state:</label>
+                    <label htmlFor="state">Select a state *</label>
                     <select className="bgroup" id="state" name='state' onChange={fetchCities} value={user.state}>
                         <option value="">-- Select State --</option>
                         {
@@ -127,7 +166,7 @@ const DonorSignup = (props) => {
                     
                     </select>
 
-                    <label htmlFor="city">Select a city:</label>
+                    <label htmlFor="city">Select a city*</label>
                     <select className="bgroup" name='city' value={user.city} onChange={handleInputs} >
                     {/* <select id="city" disabled={!states} name='city' onChange={handleSelectedCity} value={selectedCity}> */}
                         <option value="">--Select a city--</option>
@@ -138,21 +177,31 @@ const DonorSignup = (props) => {
                         ))}
                     </select>
 
-                    <label htmlFor="email">Email</label>
+                    <label htmlFor="email">Email *</label>
                     <input type="email" id="email" name="email" required value={user.email} onChange={handleInputs} />
 
-                    <label htmlFor="pwd">Password</label>
+                    <label htmlFor="pwd">Password *</label>
                     <input type="password" id="pwd" name="pwd" required value={user.pwd} onChange={handleInputs} />
 
-                    <label htmlFor="pwd">Confirm password</label>
+                    <label htmlFor="pwd">Confirm password *</label>
                     <input type="password" id="cpwd" name="cpwd" required value={user.cpwd} onChange={handleInputs} />
 
                     <button type="submit" value="Signup" onClick={PostData}>Signup</button>
+                    <ToastContainer
+                        position="top-center"
+                        autoClose={2000}
+                        newestOnTop
+                        closeOnClick={true}
+                        rtl={false}
+                        draggable
+                        pauseOnHover={false}
+                        theme="dark"/>
                     </form>
                     <p>Have an account? <NavLink to='/login' id="signup-link"><u>Login</u></NavLink>
                     </p>
                 </div>
             </div>
+            }
         </div>
     )
 }
