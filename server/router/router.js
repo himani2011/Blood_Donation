@@ -16,6 +16,8 @@ router.get('/', (req, res) => {
 });
 
 router.post('/dsignup', async (req, res) => {
+    const role=0;
+    const isAvailable=true;
     const { name, age, bloodGroup, pno, apno, email, pwd, cpwd, work, state,city } = req.body;
 
     //    if(!name|| !age|| !bloodGroup|| !pno|| !apno|| !email|| !pwd|| !cpwd,!work){
@@ -33,7 +35,7 @@ router.post('/dsignup', async (req, res) => {
             return res.status(401).json({ message: "Passwords don't match" });
         }
         else {
-            const user = new Donor({ name, age, bloodGroup, pno, apno, email, pwd, cpwd, work, state,city });
+            const user = new Donor({ name, age, bloodGroup, pno, apno, email, pwd, cpwd, work, state,city,role,isAvailable });
             const token = createToken(user._id);
             await user.save();
             res.status(201).json({token});
@@ -45,6 +47,7 @@ router.post('/dsignup', async (req, res) => {
 })
 
 router.post('/osignup', async (req, res) => {
+    const role=1;
     const { name, bloodGroups, pno, apno, email, pwd, cpwd, pos, state,city } = req.body;
 
     //    if(!name|| !bloodGroups|| !pno|| !apno|| !email|| !pwd|| !cpwd,!pos){
@@ -62,11 +65,11 @@ router.post('/osignup', async (req, res) => {
             return res.status(401).json({ message: "Passwords don't match" });
         }
         else {
-            const org = new Org({ name, bloodGroups, pno, apno, email, pwd, cpwd, pos, state,city });
+            const org = new Org({ name, bloodGroups, pno, apno, email, pwd, cpwd, pos, state,city,role });
             const token = createToken(org._id);
             await org.save();
             res.status(201).json({ token });
-            console.log("Saved org:  ",org);
+            //console.log("Saved org:  ",org);
         }
     } catch (error) {
         console.log(error);
@@ -110,21 +113,67 @@ router.post('/login', async (req, res) => {
 
 })
 
-router.get('/profile', requireAuth ,(req,res) =>{
+router.get('/profile', requireAuth ,async (req,res) =>{
     try {
         if(req.org){
-            const org =1;
-            res.status(201).json(req.org);
+            //console.log("Req.user: ",req.org);
+            res.status(201).json(req.org);    
+        }else if(req.user){
+            //console.log("Req.user: ",req.user);
+            res.status(201).json(req.user); 
         }
-        else if(req.user){
-            const user=1;
-            res.status(201).json(req.user);
-        }
-        
+       
     } catch (error) {
         console.log(error);
+        res.status(422).json({msg: error.message});
     }
 });
+
+router.post('/updateProfile',requireAuth,async (req,res)=>{
+    try {
+        if(req.org){
+            const {bloodGroups,pno,apno,email} = req.body;
+            const org = req.org;
+        
+            if(bloodGroups.length!==0){
+                await Org.updateOne({_id: org._id},{$set:{bloodGroups:bloodGroups}});
+            }
+            if(pno!==0){
+                await Org.updateOne({_id: org._id},{$set:{pno:pno}});
+            }
+            if(apno!==0){
+                await Org.updateOne({_id: org._id},{$set:{apno:apno}});
+            }
+            if(email!==""){
+                await Org.updateOne({_id: org._id},{$set:{email:email}});
+            }
+    
+            res.status(201).json({msg:"Success"});
+        }
+        else if(req.user){
+            const {isAvailable,pno,apno,email} = req.body;
+            //console.log("Req.boydL :",isAvailable)
+            const user = req.user;
+            if(req.user.isAvailable !== isAvailable){
+                await Donor.updateOne({_id:user.id},{$set:{isAvailable:isAvailable}});
+            }
+            if(pno!==0){
+                await Donor.updateOne({_id: user._id},{$set:{pno:pno}});
+            }
+            if(apno!==0){
+                await Donor.updateOne({_id: user._id},{$set:{apno:apno}});
+            }
+            if(email!==""){
+                await Donor.updateOne({_id: user._id},{$set:{email:email}});
+            }    
+            res.status(201).json({msg:"Success"});
+        }
+    } catch (error) {
+        console.log("Errorrrr:",error)
+        res.status(401).json({msg:"Error"})
+    }
+   
+})
 
 router.get('/donorResults/:st/:ct/:bg', async (req,res)=>{
     let st = req.params.st;
@@ -135,7 +184,7 @@ router.get('/donorResults/:st/:ct/:bg', async (req,res)=>{
     //     res.status(401).json({ message: "please fill all the fields" });
     // }
 
-    filtered= await Donor.find({$and: [{state:st},{city:ct},{bloodGroup:bg}]});
+    filtered= await Donor.find({$and: [{state:st},{city:ct},{bloodGroup:bg},{isAvailable:true}]});
 
     res.status(201).json(filtered);
 })

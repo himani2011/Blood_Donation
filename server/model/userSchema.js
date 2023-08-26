@@ -34,6 +34,12 @@ const donorSchema = new mongoose.Schema({
     },
     city:{
         type:String
+    },
+    role:{
+        type:Number
+    },
+    isAvailable:{
+        type:Boolean
     }
 });
 
@@ -67,6 +73,9 @@ const orgSchema = new mongoose.Schema({
     },
     city:{
         type:String
+    },
+    role:{
+        type:Number
     }
 });
 

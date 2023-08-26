@@ -5,9 +5,9 @@ import Logo from '../logo.png';
 const Navbar = (props) => {
     return (
         <div>
-            <nav className="navbar navbar-dark bg-dark navbar-expand-lg">
+            <nav className="navbar fixed-top navbar-dark bg-dark navbar-expand-lg">
                 <div className="container-fluid">
-                    <a className="navbar-brand" href="/">BloodHelp</a><img src={Logo} alt='logo' style={{marginLeft:"-28px"}}/>
+                    <a className="navbar-brand" href="/">BloodHelp<img src={Logo} alt='logo' style={{marginLeft:"-10px"}}/></a>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -32,11 +32,14 @@ const Navbar = (props) => {
                             </>
 
                                 : 
-                            
+                            <>
                             <li className="nav-item">
                                 <NavLink className="nav-link" to="/logout">Logout</NavLink>
                             </li>
-                            
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to="/profile">Profile</NavLink>
+                            </li>
+                            </>
 
                             }
                             

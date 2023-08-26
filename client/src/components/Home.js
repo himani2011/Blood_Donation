@@ -9,6 +9,7 @@ const Home = () => {
 
     //for spinner
     const [spin,setSpin] = useState(false);
+    const [spin1,setSpin1] = useState(false);
 
     const [states, setStates] = useState([]);
     const [cities, setCities] = useState([]);
@@ -91,7 +92,9 @@ const Home = () => {
                 //     setSpin(false);
                 // },500);
                 setSpin(false);
-                alert("No results found!");
+                setTimeout(()=>{    
+                    toast.error("No results found!!");
+                },200);
             } else {
                 setSpin(false);
                 setShow(results);
@@ -106,7 +109,7 @@ const Home = () => {
 
     const getOrgs = async (e) => {
         setOrgShow([]);
-        setSpin(true);
+        setSpin1(true);
         e.preventDefault();
         let state = st;
         let city = ct;
@@ -126,15 +129,15 @@ const Home = () => {
             const results = await res.json();
 
             if (results.length === 0) {
-                setSpin(false);
+                setSpin1(false);
                 alert("No results found!");
             } else {
                 setOrgShow(results);
             }
-            setSpin(false);
+            setSpin1(false);
             
         } catch (error) {
-            setSpin(false);
+            setSpin1(false);
             console.log(error);
         }
     }
@@ -146,26 +149,29 @@ const Home = () => {
 
     return (
         <div>
-            <div className="signup-form">
-                <div className="form-field">
-                {/* <label htmlFor="state">Select a state: </label> */}
-                <select className="bgroup" id="state" onChange={handleState} value={selectedSt} required>
-                        <option value="">-- Select State --</option>
+           
+            <div className="row " style={{margin:"100px 60px 0 60px"}}>
+            <div className='row' style={{border:"2px solid",borderColor:"#888A8A",justifyContent:"space-evenly",inlineSize:"1500px",backgroundColor:"rgba(177, 186, 145, 0.8)"}}>
+                <div className='col-md-2' style={{padding:10}}>
+                <select className="form-select form-select-lg w-100 h-85" id="state" onChange={handleState} value={selectedSt} style={{backgroundColor: "#84B0B0", color: "black"}} required>
+                        <option value="" style={{fontSize:"15px"}}>Select State</option>
                         {
                             states.map((state) => (
-                                <option name={state.name} key={state.isoCode} value={state.isoCode}>
-                                    {state.name}
+                                <option name={state.name} key={state.isoCode} value={state.isoCode} style={{fontSize:"15px"}}>
+                                    {state.name} 
                                 </option>
                             ))
                         }
                     </select>
                 </div>
+
+            
                 <div className="divider"></div>
-                <div className="form-field">
-                    <select className='bgroup' id="city" disabled={!states} onChange={handleCity} required>
-                        <option value="">--Select a city--</option>
+                <div className='col-md-2 ' style={{padding:10}}>
+                    <select className='form-select form-select-lg w-100 h-85' id="city" disabled={!states} onChange={handleCity} style={{backgroundColor: "#84B0B0", color: "black"}} required>
+                        <option value="" style={{fontSize:"15px"}}>Select a city</option>
                         {cities.map((city) => (
-                            <option key={city.id} value={city.name}>
+                            <option key={city.id} value={city.name} style={{fontSize:"15px"}}>
                                 {city.name}
                             </option>
                         ))}
@@ -173,22 +179,23 @@ const Home = () => {
                 </div>
 
                 <div className="divider"></div>
-                <div className="form-field">
-                <select className='bgroup' name='bloodGroup' onChange={handleBg} required>
-                        <option value="">Select blood group</option>
-                        <option value="AP">A+</option>
-                        <option value="AN">A-</option>
-                        <option value="BP">B+</option>
-                        <option value="BN">B-</option>
-                        <option value="OP">O+</option>
-                        <option value="ON">O-</option>
-                        <option value="ABP">AB+</option>
-                        <option value="ABN">AB-</option>
+                <div className='col-md-2' style={{padding:10,fontSize:"15px"}}> 
+                {/* form-field  */}
+                <select className='form-select form-select-lg w-100 h-85' name='bloodGroup' onChange={handleBg} style={{backgroundColor: "#84B0B0", color: "black"}} required>
+                        <option value="" style={{fontSize:"15px"}}>Select blood group</option>
+                        <option value="AP" style={{fontSize:"15px"}}>A+</option>
+                        <option value="AN" style={{fontSize:"15px"}}>A-</option>
+                        <option value="BP" style={{fontSize:"15px"}}>B+</option>
+                        <option value="BN" style={{fontSize:"15px"}}>B-</option>
+                        <option value="OP" style={{fontSize:"15px"}}>O+</option>
+                        <option value="ON" style={{fontSize:"15px"}}>O-</option>
+                        <option value="ABP" style={{fontSize:"15px"}}>AB+</option>
+                        <option value="ABN" style={{fontSize:"15px"}}>AB-</option>
                     </select>
                 </div>
-
-                <div className="form-field">
-                <button className="submit" type="submit" onClick={getDonors}>
+                <div className="divider"></div>
+                <div className='col-md-2' style={{padding:10}}>
+                <button className="btn btn-dark w-100 h-100" type="submit" onClick={getDonors}>
                     Search Donors
                 </button>
                 <ToastContainer
@@ -201,24 +208,28 @@ const Home = () => {
                  pauseOnHover={false}
                  theme="dark"/>
                 </div>
-
-                <div className="form-field">
-                <button className="submit" type="submit" onClick={getOrgs}>
+                {/* <div className="divider"></div> */}
+                <div className='col-md-2' style={{padding:10}}>
+                <button className="btn btn-dark w-100 h-100" type="submit" onClick={getOrgs}>
                     Search Organizations
                 </button>
                 </div>
+                </div>
             </div>
 
+
+            <div className='container-sm'  style={{marginTop:"30px"}}>
             {
-            !spin && <h2 style={{padding:25}}><u>Donor Results</u></h2>
+            !spin && <center><h4 style={{inlineSize: "320px",backgroundColor:"#84B0B0",border:"2px solid", borderColor:"#888A8A", marginTop:"25px",textAlign:"center"}}>Donor Results</h4></center>
             }
+            {/* #888A8A */}
             {
                 spin && <center style={{marginTop:"100px"}}><Spinner/></center>
             }
 
             {
  
-            !spin && <div className='box'>
+            !spin && <div style={{marginTop:"20px"}}>
 
             <table className="table">
                 <thead>
@@ -249,16 +260,16 @@ const Home = () => {
             </div>
 
             }
-            
+            <div>
             {
-            !spin && <h2 style={{padding:25}}><u>Organization Results</u></h2>
+            !spin1 && <center><h4 style={{inlineSize:"320px",backgroundColor:"#84B0B0",border:"2px solid",borderColor:"#888A8A",marginTop:"25px",textAlign:"center"}}>Organization Results</h4></center>
             }
             {
-                spin && <center style={{marginTop:"100px"}}><Spinner/></center>
+                spin1 && <center style={{marginTop:"-10px"}}><Spinner/></center>
             }
             {
 
-                !spin && <div className='box'>
+                !spin1 && <div style={{marginTop:"25px"}}>
 
                 <table className="table">
                     <thead>
@@ -289,8 +300,10 @@ const Home = () => {
                         
                 </div>
             }
+            </div>
        
             
+            </div>
         </div>
     )
 }

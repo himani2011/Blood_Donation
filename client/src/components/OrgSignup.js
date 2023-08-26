@@ -145,59 +145,62 @@ const OrgSignup = (props) => {
     {
     !spin && <div className="org-container">
                 <div className="form-container" id="login-form">
-                    <h1>Organization Signup</h1>
-                    <h6 style={{color:"red",marginTop:"20px"}}>(All the fields in this form are required to be filled)</h6>
+                    {/* <center><h1 style={{inlineSize: "410px",backgroundColor:"#888A8A",border:"2px solid",color:"black"}}>Organization Signup</h1></center> */}
+                    <center><h1 style={{inlineSize: "410px",backgroundColor:"#84B0B0",border:"2px solid",color:"black",borderColor:"#888A8A"}}>Organization Signup</h1></center>
+
                     <form>
-                        <label htmlFor="name">Name *</label>
+                        <label htmlFor="name" style={{color:"rgba(177, 186, 145, 0.8)"}}>Name<sup style={{color:"red"}}>*</sup></label>
                         <input type="text" id="name" name="name" required value={user.name} onChange={handleInputs} />
 
-                        <label htmlFor="pos">Position *</label>
+                        <label htmlFor="pos">Position<sup style={{color:"red"}}>*</sup></label>
                         <input type="text" id="pos" name="pos" required value={user.pos} onChange={handleInputs} />
 
-                        <label htmlFor="pno">Phone number *</label>
+                        <label htmlFor="pno">Phone number<sup style={{color:"red"}}>*</sup></label>
                         <input type="tel" id="pno" name="pno" required value={user.pno} onChange={handleInputs} />
 
-                        <label htmlFor="apno">Alternate phone number *</label>
+                        <label htmlFor="apno">Alternate phone number<sup style={{color:"red"}}>*</sup></label>
                         <input type="tel" id="apno" name="apno" required value={user.apno} onChange={handleInputs} />
-
-                        <label>Available blood groups with you *</label><br/>
-                    <div className="bgroup">
-                        <input className="form-check-input" type="checkbox" id="ap" name='bloodGroups' value="AP" checked={user.bloodGroups.includes('AP')} onChange={handleCheckbox}/>
-                            <label className="form-check-label" htmlFor="ap">A+</label>
+                   
+                        <label style={{marginBottom:"-10px"}}>Available blood groups with you<sup style={{color:"red"}}>*</sup></label><br/>
+                        <div>
+                    <div className='form-check form-check-inline'>
+                        <input className="form-check-input" type="checkbox" id="ap" name='bloodGroups' value="AP" checked={user.bloodGroups.includes('AP')} onChange={handleCheckbox} style={{accentColor:"red"}}/>
+                        <span class="checkmark"></span>
+                            <label className="form-check-label" htmlFor="ap" style={{marginLeft:"5px"}}> A+</label>
                     </div>
-                    <div className="bgroup">
+                    <div className='form-check form-check-inline'>
                         <input className="form-check-input" type="checkbox" id="an" name='bloodGroups' value="AN" checked={user.bloodGroups.includes('AN')} onChange={handleCheckbox}/>
-                            <label className="form-check-label" htmlFor="an">A-</label>
+                            <label className="form-check-label" htmlFor="an" style={{marginLeft:"5px"}}>A-</label>
                     </div>
-                    <div className="bgroup">
+                    <div className='form-check form-check-inline'>
                         <input className="form-check-input" type="checkbox" id="bp" name='bloodGroups' value="BP" checked={user.bloodGroups.includes('BP')} onChange={handleCheckbox}/>
-                            <label className="form-check-label" htmlFor="bp">B+</label>
+                            <label className="form-check-label" htmlFor="bp" style={{marginLeft:"5px"}}>B+</label>
                     </div>
-                    <div className="bgroup">
+                    <div className='form-check form-check-inline'>
                         <input className="form-check-input" type="checkbox" id="bn" name='bloodGroups' value="BN" checked={user.bloodGroups.includes('BN')} onChange={handleCheckbox} />
-                            <label className="form-check-label" htmlFor="bn">B-</label>
+                            <label className="form-check-label" htmlFor="bn" style={{marginLeft:"5px"}}>B-</label>
                     </div>
-                    <div className="bgroup">
+                    <div className='form-check form-check-inline'>
                         <input className="form-check-input" type="checkbox" id="op" name='bloodGroups' value="OP" checked={user.bloodGroups.includes('OP')} onChange={handleCheckbox} />
-                            <label className="form-check-label" htmlFor="op">O+</label>
+                            <label className="form-check-label" htmlFor="op" style={{marginLeft:"5px"}}>O+</label>
                     </div>
-                    <div className="bgroup">
+                    <div className='form-check form-check-inline'>
                         <input className="form-check-input" type="checkbox" id="on" name='bloodGroups' value="ON" checked={user.bloodGroups.includes('ON')} onChange={handleCheckbox} />
-                            <label className="form-check-label" htmlFor="on">O-</label>
+                            <label className="form-check-label" htmlFor="on" style={{marginLeft:"5px"}}>O-</label>
                     </div>
                     
-                    <div className="bgroup">
+                    <div className='form-check form-check-inline'>
                         <input className="form-check-input" type="checkbox" id="abp" name='bloodGroups' value="ABP" checked={user.bloodGroups.includes('ABP')} onChange={handleCheckbox} />
-                            <label className="form-check-label" htmlFor="abp">AB+</label>
+                            <label className="form-check-label" htmlFor="abp" style={{marginLeft:"5px"}}>AB+</label>
                     </div>
 
-                    <div className="bgroup">
+                    <div className='form-check form-check-inline'>
                         <input className="form-check-input" type="checkbox" id="abn" name='bloodGroups' value="ABN" checked={user.bloodGroups.includes('ABN')} onChange={handleCheckbox} />
-                            <label className="form-check-label" htmlFor="abn">AB-</label>
+                            <label className="form-check-label" htmlFor="abn" style={{marginLeft:"5px"}}>AB-</label>
+                    </div>
                     </div>
 
-
-                    <label htmlFor="state">Select a state *</label>
+                    <label htmlFor="state">Select a state<sup style={{color:"red"}}>*</sup></label>
                     <select className='bgroup' id="state" name="state" onChange={fetchCities} value={user.state}>
                         <option value="">-- Select State --</option>
                         {
@@ -210,7 +213,7 @@ const OrgSignup = (props) => {
                     
                     </select><br/>
 
-                    <label htmlFor="city">Select a city *</label>
+                    <label htmlFor="city">Select a city<sup style={{color:"red"}}>*</sup></label>
                     <select className='bgroup' id="city" name="city" disabled={!states} value={user.city} onChange={handleInputs}>
                         <option value="">--Select a city--</option>
                         {cities.map((city) => (
@@ -220,13 +223,13 @@ const OrgSignup = (props) => {
                         ))}
                     </select>
 
-                    <label htmlFor="email">Email *</label>
+                    <label htmlFor="email">Email<sup style={{color:"red"}}>*</sup></label>
                     <input type="email" id="email" name="email" required value={user.email} onChange={handleInputs} />
 
-                    <label htmlFor="pwd">Password *</label>
+                    <label htmlFor="pwd">Password<sup style={{color:"red"}}>*</sup></label>
                     <input type="password" id="pwd" name="pwd" required value={user.pwd} onChange={handleInputs} />
 
-                    <label htmlFor="pwd">Confirm password *</label>
+                    <label htmlFor="pwd">Confirm password<sup style={{color:"red"}}>*</sup></label>
                     <input type="password" id="cpwd" name="cpwd" required value={user.cpwd} onChange={handleInputs} />
 
                     <button type="submit" value="Signup" onClick={PostData}>Register</button>
@@ -240,7 +243,7 @@ const OrgSignup = (props) => {
                         pauseOnHover={false}
                         theme="dark"/>
                     </form>
-                    <p>Have an account? <NavLink to='/login' id="signup-link"><u>Login</u></NavLink>
+                    <p>Have an account? <NavLink to='/login' id="signup-link" style={{color:"#769696"}}><u>Login</u></NavLink>
                     </p>
                 </div>
             </div>

@@ -20,9 +20,9 @@ const FAQ = () => {
   return (
     <div>
       <section className="faq" style={{paddingLeft: 20}}>
-    <h2 className='h2-faq' style={{marginTop:"20px",marginBottom:"20px"}}><u>Frequently Asked Questions</u></h2>
+    <h2 className='h2-faq' style={{marginTop:"100px",marginBottom:"20px",inlineSize: "470px",backgroundColor:"#84B0B0",border:"2px solid",borderColor:"#888A8A",textAlign:"center" }}>Frequently Asked Questions</h2>
 
-    <div class="faq-container">
+    <div class="faq-container" style={{border:"2px solid",borderColor:"#888A8A",justifyContent:"flex-start",inlineSize:"1250px",backgroundColor:"rgba(177, 186, 145, 0.8)",textAlign:"justify",padding:"10px"}}>
       <details class="faq-box" open>
         <summary class="faq-header" style={headerStyles.header}> 
         <b>How  often one can donate the blood?</b>

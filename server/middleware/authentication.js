@@ -12,8 +12,9 @@ const requireAuth = async (req,res,next) =>{
 
         const {_id} = jwt.verify(token,process.env.SECRET_KEY);
         req.user = await Donor.findOne({_id});
-        req.org = await Donor.findOne({_id});
+        req.org = await Org.findOne({_id});
         req.id= await Org.findOne({_id}).select({_id});
+        req.did= await Donor.findOne({_id}).select({_id});
 
         //if(Org.find({ _id: { $exists: true } })){
         next();

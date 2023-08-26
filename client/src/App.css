@@ -55,6 +55,7 @@
 html,
 body {
   height: 100%;
+  /*;*/
 }
 
 body {
@@ -62,7 +63,7 @@ body {
   place-items: center center;
   font-family: "Fira Sans";
   font-size: 1rem;
-  color: rgba(0,0,0, .9)
+  color: rgba(0,0,0, .9);
 }
 
 .signup-form {
@@ -122,8 +123,20 @@ body {
 
 .divider {
   background: rgba(0,0,0, .1);
-  width: 2px;
+  width: 90px;
   align-self: stretch;
   margin: .5rem 0;
 }
+select {
+  font-size: inherit;
+  line-height: inherit;
+  padding: inherit;
+  /* Add more styles as needed */
+}
 
+/* Reset default styles for select options */
+select option {
+  font-size: inherit;
+  line-height: inherit;
+  padding: inherit;
+}

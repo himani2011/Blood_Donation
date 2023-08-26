@@ -122,16 +122,15 @@ const DonorSignup = (props) => {
             
             !spin && <div className="signup-container">
                 <div className="form-container" id="login-form">
-                    <h1>Donar Signup</h1>
-                    <h6 style={{color:"red",marginTop:"20px"}}>(All the fields in this form are required to be filled)</h6>
+                    <center><h1 style={{inlineSize: "330px",border:"2px solid",color:"black",borderColor:"#888A8A",backgroundColor:"#84B0B0"}}>Donar Signup</h1></center>
                     <form>
-                        <label htmlFor="name">Name *</label>
+                        <label htmlFor="name">Name<sup style={{color:"red"}}>*</sup></label>
                         <input type="text" id="name" name="name" required value={user.name} onChange={handleInputs} />
 
-                        <label htmlFor="age">Age *</label>
+                        <label htmlFor="age">Age<sup style={{color:"red"}}>*</sup></label>
                         <input type="number" id="age" name="age" required value={user.age} onChange={handleInputs} />
 
-                        <label htmlFor="bgroup">Blood Group *</label>
+                        <label htmlFor="bgroup">Blood Group<sup style={{color:"red"}}>*</sup></label>
                         <select className='bgroup' name='bloodGroup' value={user.bloodGroup} onChange={handleInputs} >
                         <option>Select blood group</option>
                         <option value="AP">A+</option>
@@ -144,16 +143,16 @@ const DonorSignup = (props) => {
                         <option value="ABN">AB-</option>
                     </select>
 
-                    <label htmlFor="pno">Phone number*</label>
+                    <label htmlFor="pno">Phone number<sup style={{color:"red"}}>*</sup></label>
                     <input type="tel" id="pno" name="pno" required value={user.pno} onChange={handleInputs} />
 
-                    <label htmlFor="apno">Alternate phone number *</label>
+                    <label htmlFor="apno">Alternate phone number<sup style={{color:"red"}}>*</sup></label>
                     <input type="tel" id="apno" name="apno" required value={user.apno} onChange={handleInputs} />
 
-                    <label htmlFor="work">Profession *</label>
+                    <label htmlFor="work">Profession<sup style={{color:"red"}}>*</sup></label>
                     <input type="text" id="work" name="work" required value={user.work} onChange={handleInputs} />
 
-                    <label htmlFor="state">Select a state *</label>
+                    <label htmlFor="state">Select a state<sup style={{color:"red"}}>*</sup></label>
                     <select className="bgroup" id="state" name='state' onChange={fetchCities} value={user.state}>
                         <option value="">-- Select State --</option>
                         {
@@ -166,7 +165,7 @@ const DonorSignup = (props) => {
                     
                     </select>
 
-                    <label htmlFor="city">Select a city*</label>
+                    <label htmlFor="city">Select a city<sup style={{color:"red"}}>*</sup></label>
                     <select className="bgroup" name='city' value={user.city} onChange={handleInputs} >
                     {/* <select id="city" disabled={!states} name='city' onChange={handleSelectedCity} value={selectedCity}> */}
                         <option value="">--Select a city--</option>
@@ -177,13 +176,13 @@ const DonorSignup = (props) => {
                         ))}
                     </select>
 
-                    <label htmlFor="email">Email *</label>
+                    <label htmlFor="email">Email<sup style={{color:"red"}}>*</sup></label>
                     <input type="email" id="email" name="email" required value={user.email} onChange={handleInputs} />
 
-                    <label htmlFor="pwd">Password *</label>
+                    <label htmlFor="pwd">Password<sup style={{color:"red"}}>*</sup></label>
                     <input type="password" id="pwd" name="pwd" required value={user.pwd} onChange={handleInputs} />
 
-                    <label htmlFor="pwd">Confirm password *</label>
+                    <label htmlFor="pwd">Confirm password<sup style={{color:"red"}}>*</sup></label>
                     <input type="password" id="cpwd" name="cpwd" required value={user.cpwd} onChange={handleInputs} />
 
                     <button type="submit" value="Signup" onClick={PostData}>Signup</button>
@@ -197,7 +196,7 @@ const DonorSignup = (props) => {
                         pauseOnHover={false}
                         theme="dark"/>
                     </form>
-                    <p>Have an account? <NavLink to='/login' id="signup-link"><u>Login</u></NavLink>
+                    <p>Have an account? Then <NavLink to='/login' id="signup-link" style={{color:"#769696"}}><u>Login</u></NavLink>
                     </p>
                 </div>
             </div>

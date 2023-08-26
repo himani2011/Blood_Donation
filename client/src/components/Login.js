@@ -87,6 +87,7 @@ const Login = (props) => {
 
   useEffect(() => {
     a.update();
+        //eslint-disable-next-line
   }, [])
 
 
@@ -100,12 +101,12 @@ const Login = (props) => {
     
      {
       !spin && <div className="container">
-        <div className="form-container" id="login-form" style={{marginTop:"20px"}}>
-          <h1>Login</h1>
+        <div className="form-container" id="login-form" style={{marginTop:"200px"}}>
+          <center><h1 style={{inlineSize: "190px",backgroundColor:"#84B0B0",border:"2px solid",color:"black",borderColor:"#888A8A"}}>Login</h1></center>
           <form>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email<sup style={{color:"red"}}>*</sup></label>
             <input type="text" id="email" name="email" required value={user.email} onChange={handleInputs} />
-              <label htmlFor="pwd">Password</label>
+              <label htmlFor="pwd">Password<sup style={{color:"red"}}>*</sup></label>
               <input type="password" id="pwd" name="pwd" required value={user.pwd} onChange={handleInputs}/>
                 <button type="submit" value="Login" onClick={PostData}>Login</button>
                 <ToastContainer
@@ -119,9 +120,9 @@ const Login = (props) => {
                  theme="dark"/>
           </form>
               <p>Don't have an account ? 
-                <NavLink to='/osignup' id="signup-link"> <u>Organization</u></NavLink> or 
+                <NavLink to='/osignup' id="signup-link" style={{color:"#769696"}}> <u>Organization</u></NavLink> or 
                 
-                <NavLink to='/dsignup' id="signup-link"> <u>Donar</u></NavLink> 
+                <NavLink to='/dsignup' id="signup-link" style={{color:"#769696"}}> <u>Donar</u></NavLink> 
                 </p>
         </div>
       </div>
