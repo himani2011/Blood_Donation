@@ -1,6 +1,5 @@
 const {Donor,Org} = require("../model/userSchema");
 const jwt = require("jsonwebtoken");
-const router = require("../router/router");
 
 const requireAuth = async (req,res,next) =>{
     try {

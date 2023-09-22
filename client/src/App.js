@@ -11,6 +11,9 @@ import ErrorPage from './components/ErrorPage';
 import Logout from './components/Logout';
 import { Routes, Route } from 'react-router-dom';
 import NoteState from './context/notes/NoteState';
+import Forgotpassword from './components/Forgotpassword';
+import Resetpassword from './components/Resetpassword';
+
 
 const App = () => {
 
@@ -35,6 +38,8 @@ const App = () => {
         <Route path='/profile' element={<Profile/>} />
         <Route path='/logout' element={<Logout setAuth={setAuth}/>} />
         <Route path='/faq' element={<FAQ />} />
+        <Route path='/forgotPassword' element={<Forgotpassword/>} />
+        <Route path='/resetPassword/:id' element={<Resetpassword/>} />
         <Route path='/*' element={<ErrorPage/>} />
       </Routes>
       </NoteState>

@@ -9,14 +9,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 245vh;
+    height: 270vh;
   }
 
   .org-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 240vh;
+    height: 260vh;
   }
   
   .form-container {
@@ -80,6 +80,10 @@
   
   button:hover {
     background-color: grey;
+  }
+
+  button:disabled{
+    background-color: black;
   }
   
   a {

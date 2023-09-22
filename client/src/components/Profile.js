@@ -9,17 +9,28 @@ const Profile = () => {
     const navigateTo = useNavigate();
 
     const [spin,setSpin]=useState(false);
+
+    //for user
+    const [change,setChange] = useState(false);
+    const [changeApno,setChangeApno] = useState(false);
+
+    //for org
+    const [changeOrg,setChangeOrg] = useState(false);
+    const [changeOrgApno,setChangeOrgApno] = useState(false);
+
+    // eslint-disable-next-line
+    const [switchChanged,setSwitchChanged] = useState(false)
+
     //for user
     const [user,setUser] = useState([]);
-    
+  
     //for org
     const [org,setOrg] = useState([]);
     
 
     const getUserData = async() =>{
         setSpin(true);
-        try {
-            
+        try {     
             const res =await fetch('/profile',{
                 method:"GET",
                 headers:{
@@ -29,7 +40,6 @@ const Profile = () => {
             });
         
         const data = await res.json();
-        console.log(data.isAvailable);
         if(res.status===201){
             if(data.role===1){
                 setOrg(data);
@@ -38,8 +48,7 @@ const Profile = () => {
             else{
                 setUser(data);  
                 setSpin(false);
-            }
-            
+            }        
         }
        else{
         alert("Login required!!");
@@ -49,7 +58,6 @@ const Profile = () => {
         } catch (error) {
             console.log(error);
         }
-
     }
 
     let name,value,isChecked;
@@ -64,24 +72,45 @@ const Profile = () => {
             console.log("not Checked!")
             setOrg({ ...org, bloodGroups: org.bloodGroups.filter((group) => group !== value) });
           }
-      };
-    
+        setSwitchChanged(true)
+      }; 
 
     const handleInputs = (e) => {
         name = e.target.name;
         value = e.target.value;
         setUser({ ...user, [name]: value });
-        
+        setSwitchChanged(true)
+        setChange(true);
       }
+      const handleInputsApno = (e) => {
+        name = e.target.name;
+        value = e.target.value;
+        setUser({ ...user, [name]: value });
+        setSwitchChanged(true)
+        setChangeApno(true);
+      }
+    
     
       const handleOrgInputs = (e) => {
         name = e.target.name;
         value = e.target.value;
         setOrg({ ...org, [name]: value });
+        setSwitchChanged(true)
+        setChangeOrg(true);
+      }
+
+      const handleOrgInputsApno = (e) => {
+        name = e.target.name;
+        value = e.target.value;
+        setUser({ ...org, [name]: value });
+        setSwitchChanged(true)
+        setChangeOrgApno(true);
       }
 
     const changeAvail=(e)=>{
         setUser({...user,isAvailable:e.target.checked});
+        setSwitchChanged(true);
+        // document.getElementById("donorUpdate").disabled = !this.checked;
     }
 
     const updateProfile =async (e) =>{
@@ -103,17 +132,25 @@ const Profile = () => {
 
             const data = await res.json();
             if(res.status===201){
-                setSpin(false);
+                setTimeout(()=>{
+                    setSpin(false);
                     setOrg(data);
-
+                },200)
+                
                 setTimeout(()=>{    
                 toast.success("Profile updated!!");
-                },200);
-                setTimeout(()=>{    
-                        window.location.reload();
-                },400); 
-            }
-    
+                },400);
+            }else{
+                setTimeout(()=>{
+                    setSpin(false);
+                  },500);
+            
+                  setTimeout(()=>{
+                      toast.error(data.message);
+                  },800);
+            }      
+            setSwitchChanged(false)
+
         } catch (error) {
             toast.error("Error updating your profile!");
         }
@@ -137,24 +174,35 @@ const Profile = () => {
             });
 
             const data = await res.json();
+            console.log("data : ",data)
             if(res.status===201){
-                setSpin(false);
-                setUser(data)
-                    setTimeout(()=>{     
+
+                setTimeout(()=>{
+                    setSpin(false);
+                    setUser(data);
+                },200)
+                
+                setTimeout(()=>{     
                       toast.success("Profile updated!!");
-                    },100); 
-                    setTimeout(()=>{    
-                        window.location.reload();
-                      },300); 
+                },400); 
+                
+            }else{
+                setTimeout(()=>{
+                    setSpin(false);
+                },200)
+                
+                setTimeout(()=>{     
+                    toast.error(data.message);
+                },400); 
             }
+            setSwitchChanged(false)
             
         } catch (error) {
             toast.error("Error updating your profile!");
 
         }
     }
-
-    
+  
     useEffect(()=>{
     getUserData();
     //eslint-disable-next-line
@@ -165,27 +213,32 @@ const Profile = () => {
         <div>
             {spin && <center style={{marginTop:"100px"}}><Spinner/></center>}
             {
-                !spin && user.length !==0 &&
+                !spin && user!== undefined && user.length !==0 && 
                 <div className="form-container" id="login-form" style={{marginTop:"90px"}}>
-                <h1>Update your information</h1>
+                <center><h2 style={{inlineSize: "430px",backgroundColor:"#84B0B0",border:"2px solid",color:"black",borderColor:"#888A8A",textAlign:"center"}}>Update your information</h2></center>
                 <form>
-                <label className='mb-3'>Turn your availability on/off:</label>
+                <label className='mb-3 mt-3'>Turn your availability on/off:</label>
                 <div className="form-check form-switch ">
                     <input className="form-check-input" type="checkbox" name="isAvailable" id="flexSwitchCheckReverse" checked={user.isAvailable} onChange={(e)=>{changeAvail(e)}}/>
                     <label className="form-check-label" htmlFor="flexSwitchCheckReverse">Available</label>
                 </div>
-
-                <div>
+    
                     <label htmlFor="pno">Update Phone number</label>
-                    <input type="number" className="form-control w-75" id="pno" name='pno' placeholder={user.pno} onChange={handleInputs}/>
+                    <input type="tel" className="form-control w-100" id="pno" name='pno' placeholder={user?.pno || ''} pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxLength={10} minLength={10} onChange={handleInputs} />
+
+                    {change === true && user.pno.toString().length !== 10 && <p style={{ color: 'grey',textAlign:"left",marginTop:"1px" }}>Enter a valid phone number!</p>}
 
                     <label htmlFor="apno">Update Alternate phone number</label>
-                    <input type="number" className="form-control w-75" id="apno" name='apno' placeholder={user.apno} onChange={handleInputs}/>
+                    <input type="tel" className="form-control w-100" id="apno" name='apno' placeholder={user?.apno || "N/A"} pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxLength={10} minLength={10} onChange={handleInputsApno}/>
+
+                    {changeApno === true && user.apno.toString().length !== 10 && <p style={{ color: 'grey',textAlign:"left",marginTop:"1px" }}>Enter a valid phone number!</p>}
+                    {changeApno === true && user.pno === user.apno && <p style={{ color: 'grey',textAlign:"left",marginTop:"1px" }}>Enter a different phone number!</p>}
 
                     <label htmlFor="email">Update Email</label>
-                    <input type="email" className="form-control w-75" id="email" name='email' placeholder={user.email} onChange={handleInputs}/>
+                    <input type="email" className="form-control w-100" id="email" name='email' placeholder={user?.email || ''} onChange={handleInputs}/>
 
-                    <button type="submit" value="update" onClick={updateUserProfile}>Update</button>
+                    <button type="submit" className='mt-3' value="update" id="donorUpdate" onClick={updateUserProfile}>Update</button>
+
                     <ToastContainer
                     position="top-center"
                     autoClose={2000}
@@ -195,16 +248,13 @@ const Profile = () => {
                     draggable
                     pauseOnHover={false}
                     theme="dark"/>
-                </div>
+                
                 </form>
                    
-            {/* <div className='box mb-3'>
-                
-            </div>  */}
             </div>
             }
             {
-                org.length !==0 && org.bloodGroups !== undefined && !spin &&
+                org!==undefined && org.length !==0 && org.bloodGroups !== undefined && !spin && 
                 <div className="form-container" id="login-form" style={{marginTop:"90px"}} >
                 <h1>Update your information</h1>
                 <form>
@@ -246,13 +296,18 @@ const Profile = () => {
                     </div>
                     <div>
                     <label htmlFor="pno">Update Phone number</label>
-                    <input type="number" className="form-control w-75" id="pno" placeholder={org.pno} name='pno' onChange={handleOrgInputs}/>
+                    <input type="tel" className="form-control w-75" id="pno" placeholder={org?.pno || ''} name='pno' pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxLength={10} minLength={10} onChange={handleOrgInputs}/>
 
-                    <label htmlFor="oano">Update Alternate phone number</label>
-                    <input type="number" className="form-control w-75" id="opno" placeholder={org.apno} name='apno' onChange={handleOrgInputs}/>
+                    {changeOrg === true && org.pno.toString().length !== 10 && <p style={{ color: 'grey',textAlign:"left",marginTop:"1px" }}>Enter a valid phone number!</p>}
 
-                    <label htmlFor="oano">Alternate email</label>
-                    <input type="email" className="form-control w-75" id="email" placeholder={org.email} name='email' onChange={handleOrgInputs}/>
+                    <label htmlFor="apno">Update Alternate phone number</label>
+                    <input type="tel" className="form-control w-75" id="apno" placeholder={org?.apno || "N/A"} name='apno' pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxLength={10} minLength={10} onChange={handleOrgInputsApno}/>
+
+                    {changeOrgApno === true && org.apno.toString().length !== 10 && <p style={{ color: 'grey',textAlign:"left",marginTop:"1px" }}>Enter a valid phone number!</p>}
+                    {changeOrgApno === true && org.pno === org.apno && <p style={{ color: 'red',textAlign:"left",marginTop:"1px" }}>Enter a different phone number!</p>}
+
+                    <label htmlFor="email">Alternate email</label>
+                    <input type="email" className="form-control w-75" id="email" placeholder={org?.email || ''} name='email' onChange={handleOrgInputs}/>
 
                     <button type="submit" value="update" onClick={updateProfile}>Update</button>
                     <ToastContainer
