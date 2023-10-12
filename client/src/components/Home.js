@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { State, City } from 'country-state-city';
 import {ToastContainer,toast} from 'react-toastify';
 import Spinner from './Spinner';
@@ -10,6 +11,7 @@ const Home = () => {
     //for spinner
     const [spin,setSpin] = useState(false);
     const [spin1,setSpin1] = useState(false);
+    const [spin2,setSpin2] = useState(false);
 
     const [states, setStates] = useState([]);
     const [cities, setCities] = useState([]);
@@ -19,7 +21,39 @@ const Home = () => {
     const [st, setSt] = useState("");
     const [ct, setCt] = useState("");
     const [bg, setBg] = useState("");
+    const [name,setName] = useState("");
 
+    //for displaying name of org/user
+    const token = localStorage.getItem("TOKEN");
+    const navigateTo = useNavigate();
+
+    const getUserName = async() =>{
+        // setTimeout(()=>{
+            setSpin2(true);
+        // },2000)
+        try {     
+            const res =await fetch('/profile',{
+                method:"GET",
+                headers:{
+                    "Content-Type":"application/json",
+                    "Authorization":token
+                }
+            });
+        
+        const data = await res.json();
+        if(res.status===201){
+           setSpin2(false);
+           setName(data.name);      
+        }
+       else{
+        alert("Login required!!");
+        navigateTo('/login');
+       }
+    
+        } catch (error) {
+            console.log(error);
+        }
+    }
     const fetchStates = () => {
         const canadaStates = State.getStatesOfCountry("CA");
         setStates(canadaStates);
@@ -144,13 +178,22 @@ const Home = () => {
 
     useEffect(() => {
         fetchStates();
+        getUserName();
+        //eslint-disable-next-line
     }, []);
 
 
     return (
         <div>
-           
+            
             <div className="row " style={{margin:"100px 60px 0 60px"}}>
+                <div marginBottom="50px">
+                {
+                spin2 && <center style={{marginTop:"-50px"}}><Spinner/></center>
+               }
+                <center> <h4 color='black' textalign="center">{!spin2 && <span>Welcome {name}</span>}</h4> </center>
+                </div>
+            
             <div className='row' style={{border:"2px solid",borderColor:"#888A8A",justifyContent:"space-evenly",inlineSize:"1500px",backgroundColor:"rgba(177, 186, 145, 0.8)"}}>
                 <div className='col-md-2' style={{padding:10}}>
                 <select className="form-select form-select-lg w-100 h-85" id="state" onChange={handleState} value={selectedSt} style={{backgroundColor: "#84B0B0", color: "black"}} required>

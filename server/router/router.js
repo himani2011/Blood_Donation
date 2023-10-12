@@ -277,8 +277,16 @@ router.post('/updateProfile',requireAuth,async (req,res)=>{
     try {
         if(req.org){
             const pattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const {bloodGroups,pno,apno,email} = req.body;
+            const {bloodGroups,email} = req.body;
+            const pno=Number(req.body.pno);
+            const apno=Number(req.body.apno);
             const org = req.org;
+
+            console.log("org.pno: ",org.pno)
+            console.log("pno: ",pno)
+            console.log("org.apno: ",org.apno)
+            console.log("apno: ",apno)
+
             
             // for array comparision: JSON.stringify(bloodGroups)
             if((JSON.stringify(bloodGroups) === JSON.stringify(org.bloodGroups)) && pno===org.pno && apno === org.apno && email === org.email){
@@ -287,14 +295,19 @@ router.post('/updateProfile',requireAuth,async (req,res)=>{
             if(pno !== org.pno && pno.toString().length !== 10){
                 return res.status(401).json({message:"Enter a valid phone nujhmber!"});
             }
-            if(apno !== org.apno && apno.toString().length !== 10){
+
+            if(apno !== org.apno && apno.toString().length !== 10 && apno.toString().length !== 1){
             return res.status(401).json({message:"Enter a valid alternate phone number!"});
             }
-            if(apno !== org.apno && (apno === org.pno || apno === pno)){
+            if(pno !== org.pno &&  pno === apno){
+                return res.status(401).json({message:"Enter a different phone number!"});
+            }
+        
+            if(apno !== 0 && apno === pno){
             return res.status(401).json({message:"Enter a different alternate phone number!"});
             }
-            if(!pattern.test(email) || email === org.email){
-            return res.status(401).json({message:"Enter a valid/different email address!"});
+            if(email!==org.email && !pattern.test(email)){
+            return res.status(401).json({message:"Enter a valid email address!"});
             } 
 
             //--------updating----------
@@ -315,26 +328,40 @@ router.post('/updateProfile',requireAuth,async (req,res)=>{
         }
         else if(req.user){
             const pattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const {isAvailable,pno,apno,email} = req.body;
+            const {isAvailable,email} = req.body;
+            const pno=Number(req.body.pno);
+            const apno=Number(req.body.apno);
+
             const user = req.user;
 
             //-----------if everything is unchanged or for errors--------
             if(isAvailable===user.isAvailable && pno===user.pno && apno === user.apno && email === user.email){
                 return res.status(401).json({message:"At least update one field!"});
-            }
+            }//WORKING
+
+
             //if pno is changed and not a valid one
             if(pno !== user.pno && pno.toString().length !== 10){
                 return res.status(401).json({message:"Enter a valid phone number!"});
+            } //WORKING
+
+            if(pno != user.pno && pno == apno){
+                return res.status(401).json({message:"Enter a different phone number!"});
             }
             if(apno !== user.apno && apno.toString().length !== 10){
             return res.status(401).json({message:"Enter a valid alternate phone number!"});
-            }
-            if(apno !== user.apno && (apno === user.pno || apno === pno)){
+            }//WORKING
+           
+
+            if(apno !== user.apno && apno === pno){
             return res.status(401).json({message:"Enter a different alternate phone number!"});
             }
-            if(email !== user.email || !pattern.test(email) || email === user.email){
-            return res.status(401).json({message:"Enter a valid/different email address!"});
-            } 
+
+
+            if(email !== user.email && !pattern.test(email)){
+            return res.status(401).json({message:"Enter a valid email address!"});
+            } //WORKING
+
         
             //-----------Updating---------- 
             if(user.isAvailable !== isAvailable){
@@ -349,8 +376,14 @@ router.post('/updateProfile',requireAuth,async (req,res)=>{
             if(email!==user.email){
                 await Donor.updateOne({_id: user._id},{$set:{email:email}});
             }    
-            
+           
             const data = await Donor.findOne({email:email})
+            if(user.apno===pno || pno===apno){
+                console.log("Phnumners are same")
+            }else{
+                console.log("Not same ")
+            }
+
             res.status(201).json(data);
         }
     } catch (error) {

@@ -16,6 +16,9 @@ const Navbar = (props) => {
                             <li className="nav-item">
                                 <NavLink className="nav-link active" aria-current="page" to="/">Home</NavLink>
                             </li>
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to="/faq">FAQs</NavLink>
+                            </li>
                             {
                                 !props.auth ? 
 
@@ -34,10 +37,10 @@ const Navbar = (props) => {
                                 : 
                             <>
                             <li className="nav-item">
-                                <NavLink className="nav-link" to="/logout">Logout</NavLink>
+                                <NavLink className="nav-link" to="/profile">Profile</NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink className="nav-link" to="/profile">Profile</NavLink>
+                                <NavLink className="nav-link" to="/logout">Logout</NavLink>
                             </li>
                             </>
 
@@ -47,9 +50,7 @@ const Navbar = (props) => {
                             {/* <li className="nav-item">
                                 <a className="nav-link" href="/profile">Profile</a>
                             </li> */}
-                            <li className="nav-item">
-                                <NavLink className="nav-link" to="/faq">FAQs</NavLink>
-                            </li>
+                           
                         </ul>
                     </div>
                 </div>

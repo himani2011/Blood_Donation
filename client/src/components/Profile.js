@@ -102,7 +102,7 @@ const Profile = () => {
       const handleOrgInputsApno = (e) => {
         name = e.target.name;
         value = e.target.value;
-        setUser({ ...org, [name]: value });
+        setOrg({ ...org, [name]: value });
         setSwitchChanged(true)
         setChangeOrgApno(true);
       }
@@ -172,10 +172,12 @@ const Profile = () => {
                     isAvailable,pno,apno,email
                 })
             });
-
+            console.log("reaching")
             const data = await res.json();
+            console.log("reaching 2")
             console.log("data : ",data)
             if(res.status===201){
+                console.log("status 201.........................")
 
                 setTimeout(()=>{
                     setSpin(false);
@@ -187,6 +189,8 @@ const Profile = () => {
                 },400); 
                 
             }else{
+                console.log("reaching 4011111111111111111")
+
                 setTimeout(()=>{
                     setSpin(false);
                 },200)
@@ -254,7 +258,8 @@ const Profile = () => {
             </div>
             }
             {
-                org!==undefined && org.length !==0 && org.bloodGroups !== undefined && !spin && 
+                // org!==undefined && org.length !==0 && org.bloodGroups !== undefined && !spin && 
+                !spin && org!==undefined && org.length !==0 && org.bloodGroups !== undefined  && 
                 <div className="form-container" id="login-form" style={{marginTop:"90px"}} >
                 <h1>Update your information</h1>
                 <form>
